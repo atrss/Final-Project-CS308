@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Game</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            font-family: 'Roboto';
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        body {
+            background-color: black;
+            font-family: arial;
+            color: white;
+            font-size: 3.5vh;
+
+        }
+
+        .main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .images {
+            display: flex;
+            flex-direction: row;
+            align-content: center;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .images img {
+            max-width: 300px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="main center">
+        <div class="images">
+            <!-- TODO: add random pictures, loading screen!! -->
+            <img id="img1" src="./images/stim1.jpg" />
+            <img id="face" style="visibility: hidden;" />
+            <img id="img2" src="./images/stim2.jpg" />
+            <!-- <img id="arrow" /> -->
+        </div>
+        <p>Points : <span id="points">0</span></p>
+    </div>
+    <script src="./game.js"></script>
+</body>
+
+</html>

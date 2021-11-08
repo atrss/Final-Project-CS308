@@ -1,0 +1,1068 @@
+﻿<usermanual>														
+___________________________________________________________________________________________________________________	
+
+										*Probabilistic Reversal Learning Task*
+___________________________________________________________________________________________________________________	
+
+Script Author: Katja Borchert, Ph.D. (katjab@millisecond.com) for Millisecond Software, LLC
+Date: 03-07-2018
+last updated:  03-11-2020 by K. Borchert (katjab@millisecond.com) for Millisecond Software, LLC
+
+Script Copyright © 03-11-2020 Millisecond Software
+
+___________________________________________________________________________________________________________________
+BACKGROUND INFO 	
+___________________________________________________________________________________________________________________	
+This script implements a Probabilistic Reversal Learning Task, a task of adaptive learning and flexibility 
+in the context of changing stimulus-reward contingencies.
+
+References:
+
+Waegeman, A., Declerck, C.H, Boone, C., Seurinck, R. & Parizel, P.M. (2014). Individual Differences in Behavioral Flexibility in a Probabilistic Reversal Learning Task: An fMRI Study.
+Journal of Neuroscience, Psychology, and Economics, Vol. 7, No. 4, 203–218
+
+Cools R, Clark L, Owen AM, Robbins TW. (2002). Defining the neural mechanisms of probabilistic reversal learning using
+event-related functional magnetic resonance imaging. J Neurosci. 2002;22:4563–4567.
+
+Notes:
+Like Waegeman et al (2014), this Inquisit script 
+a) uses a timelimit for each of the test blocks. The number of reversals reached during that time
+reflects how fast a participant learned to adjust behavior
+
+b) attaches explicit rewards (aka points) to 'positive' feedback and punishment for 'negative' feedback (however,
+the points can be made invisible, see section Editable Parameters) and asks participant to maximize their reward without 
+explicitly alerting participants to the fact that payoff probabilities might change (however, instructions can be
+easily altered under section Editable Instructions).
+
+c) uses a 80%/20% probability for rewards and punishment (editable under section Editable Parameters)
+
+___________________________________________________________________________________________________________________
+TASK DESCRIPTION
+___________________________________________________________________________________________________________________	
+Participants are asked to select btw. 2 patterns. One patterns has an 80% probability of a reward
+and a 20% probability of a loss whereas the probabilities are reversed for the second pattern.
+Participants are asked to maximize their rewards. After participants have learned to consistently select the 
+pattern with the higher reward probability, the probabilities of the patterns are reversed.
+A block ends after 9 minutes.
+
+___________________________________________________________________________________________________________________	
+DURATION 
+___________________________________________________________________________________________________________________	
+the default set-up of the script takes appr. 30 minutes to complete
+
+___________________________________________________________________________________________________________________	
+DATA FILE INFORMATION 
+___________________________________________________________________________________________________________________	
+The default data stored in the data files are:
+
+(1) Raw data file: 'probabilisticreversallearningtask_raw*.iqdat' (a separate file for each participant)*
+
+build:								The specific Inquisit version used (the 'build') that was run
+computer.platform:					the platform the script was run on (win/mac/ios/android)
+date, time, 						date and time script was run 
+subject, group, 					with the current subject/groupnumber
+script.sessionid:					with the current session id
+
+blockcode, blocknum:				the name and number of the current block (built-in Inquisit variable)
+trialcode, trialnum: 				the name and number of the currently recorded trial (built-in Inquisit variable)
+										Note: trialnum is a built-in Inquisit variable; it counts all trials run; even those
+										that do not store data to the data file such as feedback trials. Thus, trialnum 
+										may not reflect the number of main trials run per block. 
+										
+values.countBlocks:					counts the number of test blocks
+values.counttrials:					counts the number of test trials run (across blocks)								
+values.index_correctChoice:			the itemnumber of the currently 'lucky' pattern
+values.index_incorrectChoice:		the itemnumber of the currently 'unlucky' pattern
+
+values.correctChoicePosition:		1 = lucky pattern is on the left; 2 = lucky pattern is on the right
+
+									
+values.maxCorrectChoices:			the number of consecutive correct choices until the next reversal
+									(randomly selected from 10, 11, 12, 13, 14, 15)
+								
+values.reversal:					1 =  the trial just reversed the probabilities (a reversal just took place);
+									0 = otherwise
+								
+values.relearned:					1 = participant has likely learned the reversed probability assignment
+									=> the first selection of the new lucky pattern after a reversal
+										(lucky guesses excluded)
+									0 = participant has likey not learned the reversed probability assignment
+								
+presentedCorrectStim:				the presented image file of the 'lucky pattern'
+presentedIncorrectStim:				the presented image file of the 'unlucky pattern'
+
+response:							the participant's response (scancode of response key):
+									18 = E
+									23 = I
+									57 = spacebar
+
+values.respCategory:				C = correct (selected correct/winning pattern and received 'happy' feedback)
+									PE = correct (selected correct/winning patterbBUT received 'unhappy' feedback)
+									C-RE* = first correct after reversal error or 'lucky guess' (selected correct outcome and received 'happy' feedback)
+									C-RE (PE)* = first correct after reversal errors (selected correct/winning pattern BUT received 'unhappy' feedback)
+									lucky guess* = correct (selected correct outcome during a reversal trial and received 'happy' feedback)
+									lucky guess (PE)* = correct (selected correct outcome during a reversal trial but received 'unhappy' feedback)
+									RE = reversal error =>
+									participant selected incorrect outcome (formerly correct) after a reversal until a correct response
+									is made (=evidence of relearning)
+									Note: a 'lucky guess' is not counted as evidence of relearning
+									E = incorrect (selected incorrect outcome and received 'unhappy' feedback)
+									E (PE)* = incorrect (selected incorrect outcome BUT received 'happy' feedback)
+									NR = no response (participant was not fast enough to select a choice)
+										* = should be rare (but are not impossible)
+								
+correct:							accuracy of response: 1 = correct response (chose the 'lucky' pattern); 
+									0 = otherwise
+									
+latency: 							the response latency (in ms); measured from: onset of patterns
+
+values.countConsecutiveCorrect:		running total of the consecutive choices of the 'lucky' pattern
+										(resets for reversals and when the unlucky pattern is selected)
+							
+values.feedback:					1 = negative feedback (points taken away); 
+									2 = positive feedback (points added)
+									
+values.countICFeedback:				counts the number of times negative feedback was given for the lucky pattern
+									in between reversals
+
+values.countReversals:				running count of the reversals per block
+values.totalPoints:					the accumulated points across all test blocks
+values.iti:							duration (in ms) of the current iti
+
+(2) Summary data file: 'probabilisticreversallearningtask_summary*.iqdat' (a separate file for each participant)*
+
+computer.platform:					the platform the script was run on (win/mac/ios/android)
+script.startdate:					date script was run
+script.starttime:					time script was started
+script.subjectid:					assigned subject id number
+script.groupid:						assigned group id number
+script.sessionid:					assigned session id number
+script.elapsedtime:					time it took to run script (in ms); measured from onset to offset of script
+script.completed:					0 = script was not completed (prematurely aborted); 
+									1 = script was completed (all conditions run)
+								
+values.passedPractice:				1 = practice learning criterium (participant reached first reversal) was reached
+									0 = practice learning criterium was not reached within 10 minutes and task was aborted
+									
+values.abort:						1 = task was terminated because participant failed to reach a block's learning criterium
+									within the specified timeframe.
+									practice learning criterium: participant reached first reversal within 10 minutes
+									test block learning criterium: participant reached 10th reversal within 30 minutes
+
+values.totalPoints:					the accumulated points across all test blocks
+
+values.counttrials:					counts the number of choice trials run (across all test blocks)
+
+values.countC:						counts the number of times participant chose the 'correct' option across all test blocks
+									=> (C, PE, C-RE, C-RE (PE)) - excludes 'lucky guesses'
+									
+values.countLG:						counts the number of times participant had a 'lucky guess' 
+values.countE:						counts the number of times participant chose the 'incorrect' option (excludes reversal errors) across all test blocks
+values.countRE:						counts the number of reversal errors made (see explanation for RE above under values.respCategory) across all test blocks
+values.countNR:						counts the number of 'no responses'	across all test blocks	 				
+expressions.probC:					proportion of correct responses across all test trials
+expressions.probLG:					proportion of 'lucky guesses' across all test trials
+expressions.probE:					proportion of errors across all test trials	
+expressions.probRE:					proportion of reversal errors across all test trials	
+expressions.probNR:					proportion of 'no responses' across all test trials
+
+expressions.MinICFeedback:			the minimum number of negative feedbacks for 'lucky' patterns in between reversals (across all test blocks)
+expressions.MaxICFeedback:			the maximum number of negative feedback for 'lucky' patterns in between reversals (across all test blocks)
+expressions.Mean_ICFeedback:		the mean number of negative feedback for 'lucky' patterns in between reversals (across all test blocks)
+
+values.countBlocks:					counts the number of test blocks started
+
+values.countReversals_test1:		reversal count in testblock 1 (if completed reversal count should be 9 - default)
+values.countReversals_test2:		reversal count in testblock 2 (if completed reversal count should be 9 - default)
+values.countReversals_test3:		reversal count in testblock 3 (if completed reversal count should be 9 - default)
+
+* separate data files: to change to one data file for all participants (on Inquisit Lab only), go to section
+"DATA" and follow further instructions
+
+___________________________________________________________________________________________________________________	
+EXPERIMENTAL SET-UP 
+___________________________________________________________________________________________________________________	
+
+(1) Practice:
+- the practice phase presents two patterns with the same reward/punishment probabilities as during the test.
+- the initial 'lucky' pattern is randomly determined
+- The screen position of the two patterns (left vs. right) is randomly determined (random selection with replacement).
+- Practice ends after the first reversal is reached.
+Note: if the first reversal is not reached within 5 minutes (default), practice is cut short and the script is aborted
+
+(3) Test: 3 blocks
+- each of the blocks gets 2 randomly assigned patterns (6 patterns provided)
+- one pattern has an 80% probability of reward (20% probability of punishment),
+the reward/punishment probabilities are reversed for the second pattern
+(the initial 'lucky' pattern is determined randomly)
+- The screen position of the two patterns (left vs. right) is randomly determined (random selection with replacement)
+- after 10-15 consecutive choices of the 'lucky' pattern (randomly determined), the reward/punishment probabilities are reversed
+- each test block is terminated after 9 minutes => the number of reversals will differ
+Trial Sequence:
+pattern presentation (max. 2000ms or response) -> Feedback (500ms) -> ITI: variable (min: 500ms)
+(entire trial takes: 3000ms => every 3s a new pattern is presented)
+
+___________________________________________________________________________________________________________________	
+STIMULI
+___________________________________________________________________________________________________________________	
+provided by Millisecond Software - can be edited under section Editable Stimuli
+
+___________________________________________________________________________________________________________________	
+INSTRUCTIONS 
+___________________________________________________________________________________________________________________	
+provided by Millisecond Software - can be edited under section Editable Instructions
+
+___________________________________________________________________________________________________________________	
+EDITABLE CODE 
+___________________________________________________________________________________________________________________	
+check below for (relatively) easily editable parameters, stimuli, instructions etc. 
+Keep in mind that you can use this script as a template and therefore always "mess" with the entire code to 
+further customize your experiment.
+
+The parameters you can change are:
+
+/showTotalPoints:			true (default): shows the total points accumulated
+							false: does not show the total points accumulated
+
+/maxStimDuration:		 	the maximum duration (in ms) of the patterns (default: 2000ms)
+/feedbackDuration:			the duration of the feedback (in ms) (default: 500ms)
+/SOA:						stimulus onset asynchrony (in ms): a new pattern appears every 3s (default: 3000ms)
+/readyDuration:				the duration (in ms) of the 'get ready' trial at the beginning of each block (default: 5000ms)
+
+/practiceTimeout:			the practice session ends after 5minutes if participant has not reached the learning criterium 
+							(=reach first reversal) (default: 300000ms). In this case, the task is aborted.
+							
+blockDuration:				the duration (in ms) assigned to each test block (default: 540000 => 9 minutes)							
+/highProbability:			the higher (reward) probability (default: 0.8)
+
+/leftKey:					the left response key (default: "E")
+/rightKey:					the scancode of the right response key (default: "I")
+
+/picSize:					proportional sizing of the patterns relative to canvas height (default: 30%)
+
+
+</usermanual>
+
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE PARAMETERS: change editable parameters here
+**************************************************************************************************************
+**************************************************************************************************************
+
+<parameters>
+/showTotalPoints = true
+
+/maxStimDuration = 2000
+/feedbackDuration = 500
+/SOA = 3000
+/readyDuration = 5000
+/practiceTimeout = 300000
+/blockDuration = 540000
+
+/highProbability = 0.8
+
+/leftKey = "E"
+/rightKey = "I"
+
+/picSize = 30%
+</parameters>
+
+
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE STIMULI
+**************************************************************************************************************
+**************************************************************************************************************
+
+<item practicestims>
+/1 = "practicestim1.jpg"
+/2 = "practicestim2.jpg"
+</item>
+
+<list practiceitemnumbers>
+/ items = (1, 2)
+/ replace = false
+/ resetinterval = 0
+/ selectionrate = always
+</list>
+
+<item stims>
+/1 = "stim1.jpg"
+/2 = "stim2.jpg"
+/3 = "stim3.jpg"
+/4 = "stim4.jpg"
+/5 = "stim5.jpg"
+/6 = "stim6.jpg"
+</item>
+
+<list itemnumbers>
+/ items = (1, 2, 3, 4, 5, 6)
+/ replace = false
+/ resetinterval = 0
+/ selectionrate = always
+</list>
+
+<item feedback>
+/1 = "frowny.jpg"
+/2 = "smiley.jpg"
+</item>
+
+<picture correctStim>
+/ items = stims
+/ select = values.index_correctChoice
+/ vposition = 50%
+/ erase = false
+/ size = (parameters.picSize, parameters.picSize)
+</picture>
+
+<picture incorrectStim>
+/ items = stims
+/ select = values.index_incorrectChoice
+/ vposition = 50%
+/ erase = false
+/ size = (parameters.picSize, parameters.picSize)
+</picture>
+
+<picture correctStim_practice>
+/ items = practicestims
+/ select = values.index_correctChoice
+/ vposition = 50%
+/ erase = false
+/ size = (parameters.picSize, parameters.picSize)
+</picture>
+
+<picture incorrectStim_practice>
+/ items = practicestims
+/ select = values.index_incorrectChoice
+/ vposition = 50%
+/ erase = false
+/ size = (parameters.picSize, parameters.picSize)
+</picture>
+
+<picture feedback>
+/ items = feedback
+/ select = values.feedback
+/ size = (10%, 10%)
+</picture>
+
+<text NRfeedback>
+/ items = ("Too Late!")
+/ fontstyle = ("Arial", 8%, true, false, false, false, 5, 1)
+/ position = (50%, 25%)
+/ size = (40%, 10%)
+/ txcolor = red
+</text>
+
+<text total>
+/ items = ("  Points: <%values.totalPoints%>  ")
+/ fontstyle = ("Arial", 5%, false, false, false, false, 5, 1)
+/ position = (50%, 85%)
+/ size = (80%, 8%)
+/ erase = false
+/ txcolor = gray
+</text>
+
+<picture selected>
+/ items = ("selected.png")
+/ vposition = 25%
+/ size = (8%, 8%)
+</picture>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE INSTRUCTIONS: change instructions here
+**************************************************************************************************************
+**************************************************************************************************************
+<instruct>
+/ fontstyle = ("Arial", 4%, true, false, false, false, 5, 1)
+</instruct>
+
+<htmlpage intro>
+/ file = "probabilisticreversallearningtask_intro1.htm"
+</htmlpage>
+
+<htmlpage intro2>
+/ file = "probabilisticreversallearningtask_intro2.htm"
+</htmlpage>
+
+<htmlpage test>
+/ file = "probabilisticreversallearningtask_test.htm"
+</htmlpage>
+
+<text blockInfo>
+/ items = ("Block #<%values.countBlocks%> of 3")
+/ fontstyle = ("Arial", 5%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ vjustify = center
+/ size = (80%, 8%)
+</text>
+
+<text start>
+/ items = ("<press spacebar to start>")
+/ fontstyle = ("Arial", 3%, false, false, false, false, 5, 1)
+/ position = (50%, 80%)
+/ vjustify = center
+/ size = (80%, 8%)
+</text>
+
+<text finish>
+/ items = ("Thank you!")
+/ fontstyle = ("Arial", 8%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (80%, 80%)
+/ vjustify = center
+</text>
+
+<text exit>
+/ items = ("<press spacebar to exit>")
+/ fontstyle = ("Arial", 3%, false, false, false, false, 5, 1)
+/ position = (50%, 90%)
+/ size = (80%, 5%)
+/ vjustify = center
+</text>
+
+
+*******************************
+General Helper Instructions
+******************************
+
+<text getReady>
+/ items = ("Get Ready
+~n<%expressions.buttoninstruct1%>")
+/ fontstyle = ("Arial", 3.00%, false, false, false, false, 5, 1)
+/ size = (80%, 40%)
+</text>
+
+****************************************************************************************************
+general instruction expressions: adjust the instruction text depending on device used to run script
+****************************************************************************************************
+<expressions>
+/buttoninstruct1 = if (computer.touch && !computer.haskeyboard) 
+{"place your fingers over the left '<%parameters.leftKey%>' and right '<%parameters.rightKey%>' response buttons";} 
+else {"put your fingers on the left '<%parameters.leftKey%>' key and right '<%parameters.rightKey%>' key";}
+</expressions>
+
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE LISTS: change editable lists here
+**************************************************************************************************************
+**************************************************************************************************************
+
+Note: list stores the numbers that control after how many consecutive correct responses a reversal
+takes place
+the numbers 10-15 are selected randomly with replacement
+<list reversals>
+/ items = (10, 11, 12, 13, 14, 15)
+/ replace = true
+</list>
+**************************************************************************************************************
+				!!!REMAINING CODE: Customize after careful consideration only!!!
+**************************************************************************************************************
+
+
+**************************************************************************************************************
+**************************************************************************************************************
+	DEFAULTS
+**************************************************************************************************************
+**************************************************************************************************************
+script requires Inquisit 6.1.0.0 or higher
+
+<defaults>
+/canvasaspectratio = (4,3)
+/minimumversion = "6.1.0.0"
+/ fontstyle = ("Arial", 3%, false, false, false, false, 5, 1)
+/txbgcolor = black
+/ txcolor = white
+/ screencolor = black
+</defaults>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	DATA
+**************************************************************************************************************
+**************************************************************************************************************
+
+Note: data file explanations under User Manual Information at the top
+
+To change from one data file per participant to one data file for all participants, set
+/separatefiles = false
+
+***********************
+raw data file
+***********************
+<data>
+/ columns = (build, computer.platform, date, time, subject, group, script.sessionid, blockcode, blocknum, 
+trialcode, trialnum,
+values.countBlocks, values.counttrials, values.index_correctChoice, values.index_incorrectChoice, values.correctChoicePosition,
+values.maxCorrectChoices, values.reversal, values.relearned,
+values.presentedCorrectStim, values.presentedIncorrectStim,
+response, values.respCategory, correct, latency, 
+values.countConsecutiveCorrect, values.feedback, values.countICFeedback, values.countReversals, values.totalPoints, 
+values.iti)
+</data>
+
+***********************
+summary data file
+***********************
+<summarydata>
+/ columns = (computer.platform, script.startdate, script.starttime, script.subjectid, script.groupid, script.sessionid, script.elapsedtime, 
+script.completed,
+ values.passedPractice, values.abort, 
+values.totalPoints,
+values.counttrials, values.countC, values.countLG, values.countE, values.countRE, values.countNR,
+expressions.probC, expressions.probLG, expressions.probE, expressions.probRE, expressions.probNR,
+expressions.MinICFeedback, expressions.MaxICFeedback, expressions.Mean_ICFeedback,
+values.countBlocks,
+values.countReversals_test1, values.countReversals_test2, values.countReversals_test3)
+</summarydata>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	VALUES: automatically updated
+**************************************************************************************************************
+**************************************************************************************************************
+                                    
+/reversal:					1 =  the trial just reversed the probabilities (a reversal just took place);
+							0 = otherwise
+/countReversals:			running count of the reversals per block
+/countConsecutiveCorrect:	running total of the consecutive choices of the 'lucky' pattern
+							(resets for reversals and when the unlucky pattern is selected)
+/feedback:					1 = negative feedback; 2 = positive feedback; 3 = no response feedback
+
+
+/index_correctChoice:		the itemnumber of the currently 'lucky' pattern
+/index_incorrectChoice:		the itemnumber of the currently 'unlucky' pattern
+
+/correctChoicePosition:		1 = lucky pattern is on the left; 2 = lucky pattern is on the right
+/correctKey:				stores the scancode of the lucky pattern (18 vs. 23)
+/incorrectKey:				stores the scancode of the unlucky pattern (18 vs. 23)
+
+/respCategory:				C = correct (selected correct outcome and received 'happy' feedback)
+							PE = correct (selected correct outcome BUT received 'unhappy' feedback)
+							C-RE* = first correct after reversal error or 'lucky guess' (selected correct outcome and received 'happy' feedback)
+							C-RE (PE)* = first correct after reversal errors (selected correct outcome BUT received 'unhappy' feedback)
+							lucky guess* = correct (selected correct outcome during a reversal trial and received 'happy' feedback)
+							lucky guess (PE)* = correct (selected correct outcome during a reversal trial but received 'unhappy' feedback)
+							RE = reversal error =>
+								participant selected incorrect outcome (formerly correct) after a reversal until a correct response
+								is made (=evidence of relearning)
+								Note: a 'lucky guess' is not counted as evidence of relearning
+							E = incorrect (selected incorrect outcome and received 'unhappy' feedback)
+							E (PE)* = incorrect (selected incorrect outcome BUT received 'happy' feedback)
+							NR = no response (participant was not fast enough to select a choice)
+							* = should be rare (but are not impossible)
+							
+/maxCorrectChoices:			the number of consecutive correct choices until the next reversal
+							(randomly selected from 10, 11, 12, 13, 14, 15)
+/helper:					helper variable to code reversal assignment
+/relearned:					1 = participant has likely learned the reversed probability assignment
+							=> the first selection of the new lucky pattern after a reversal
+							(lucky guesses excluded)
+							0 = participant has likey not learned the reversed probability assignment
+							
+
+/countC:					counts the number of times participant chose the 'correct' option across all test blocks
+								=> (C, PE, C-RE, C-RE (PE)) - excludes 'lucky guesses'
+/countLG:					counts the number of times participant had a 'lucky guess' 
+/countE:					counts the number of times participant chose the 'incorrect' option (excludes reversal errors) across all test blocks
+/countRE:					counts the number of reversal errors made (see explanation for RE above under values.respCategory) across all test blocks
+/countNR:					counts the number of 'no responses'	across all test blocks	 
+
+/counttrials:				counts the number of choice trials run (across all test blocks)
+/countBlocks:				counts the number of test blocks
+
+/totalPoints:				running total of the accumulated points across all test blocks
+/iti:						duration (in ms) of the current iti
+
+/countICFeedback:			counts the number of times negative feedback was given for the lucky pattern
+							in between reversals
+							
+/stop:						1 = stop the block; 0 = otherwise
+							
+<values>
+/reversal = 0
+/countReversals = 0
+/countConsecutiveCorrect = 0
+/feedback = 0
+
+/index_correctChoice = 0
+/index_incorrectChoice = 0
+
+/correctChoicePosition = 0
+/correctKey = 0
+/incorrectKey = 0
+
+/respCategory = ""
+
+/maxCorrectChoices = 0
+/helper = ""
+/relearned = 0
+
+/countC = 0
+/countLG = 0
+/countRE = 0
+/countE = 0
+/countNR = 0
+
+/counttrials = 0
+/countBlocks = 0
+
+/totalPoints = 0
+/iti = 0
+
+/countICFeedback = 0
+
+/stop = 0
+/numberReversals = 0
+/passedPractice = 1
+/abort = 0
+/skipRemainingBlocks = 0
+/presentedCorrectStim = ""
+/presentedIncorrectStim = ""
+/phase = ""
+/countReversals_test1 = 0
+/countReversals_test2 = 0
+/countReversals_test3 = 0
+
+</values>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EXPRESSIONS
+**************************************************************************************************************
+**************************************************************************************************************
+
+/lowProbability:		calculates the low probability based on parameters.highProbability
+
+/MinICFeedback:			the minimum number of negative feedbacks for 'lucky' patterns in between reversals (across all test blocks)
+/MaxICFeedback:			the maximum number of negative feedback for 'lucky' patterns in between reversals (across all test blocks)
+/Mean_ICFeedback::		the mean number of negative feedback for 'lucky' patterns in between reversals (across all test blocks)
+
+/probC:					proportion of correct responses across all test trials
+/probLG:				proportion of 'lucky guesses' across all test trials
+/probRE:				proportion of reversal errors across all test trials
+/probE:					proportion of errors across all test trials		
+/probNR:				proportion of 'no responses' across all test trials
+
+
+<expressions>
+/lowProbability = 1 - parameters.highProbability
+
+/MinICFeedback = list.ICFeedback.minimum
+/MaxICFeedback = list.ICFeedback.maximum
+/Mean_ICFeedback = list.ICFeedback.mean
+
+/probC = values.countC/values.counttrials
+/probLG = values.countLG/values.counttrials
+/probRE = values.countRE/values.counttrials
+/probE = values.countE/values.counttrials
+/probNR = values.countNR/values.counttrials
+</expressions>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	INSTRUCTIONS
+**************************************************************************************************************
+**************************************************************************************************************
+
+<trial blockinfo>
+/ stimulusframes = [1 = blockInfo, start]
+/ validresponse = (" ")
+/ recorddata = false
+</trial>
+
+<trial finish>
+/ stimulusframes = [1 = finish, exit]
+/ validresponse = (" ")
+/ recorddata = false
+</trial>
+
+
+*************************************
+General Helper Instruction Trials/Blocks
+*************************************
+
+This trial is used when participants are asked to place their fingers on specific response
+buttons. On the touchscreen, this trial presents the (inactive) response buttons to the participants.
+<trial getReady>
+/ stimulusframes = [1 = getReady]
+/ trialduration = parameters.readyDuration
+/ validresponse = (parameters.leftKey, parameters.rightKey)
+/ beginresponsetime = parameters.readyDuration
+/ errormessage = false
+/ recorddata = false
+</trial>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	STIMULI
+**************************************************************************************************************
+**************************************************************************************************************
+
+<text fixation>
+/ items = ("+")
+/ fontstyle = ("Arial", 10%, false, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (8%, 10%)
+</text>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	LISTS	
+**************************************************************************************************************
+**************************************************************************************************************
+
+list randomly assigns the left (25%) or right (75%) screen position to the correct choice
+(the left over position is assigned to the incorrect choice)
+<list hpositions>
+/ items = (25%, 75%)
+/ replace = false
+/ resetinterval = 0
+/ selectionrate = always
+</list>
+
+<list correctChoiceFeedback>
+/ items = (1, 2)
+/ itemprobabilities = (expressions.lowProbability, parameters.highProbability)
+/ poolsize = 100
+/ replace = true
+</list>
+
+<list incorrectChoiceFeedback>
+/ items = (1, 2)
+/ itemprobabilities = (parameters.highProbability, expressions.lowProbability)
+/ poolsize = 100
+/ replace = true
+</list>
+
+*************************************************
+Data Lists: used for descriptive statistics
+store correct latencies/accuracy data
+fill up during runtime
+*************************************************
+
+Note: list stores 1 = correct response; 0 = incorrect response for each relevant trial
+any response coded as an error is automatically coded as 0
+<list accuracy>
+</list>
+
+Note: list stores the latency of correct responses for each relevant trial
+<list latencies>
+</list>
+
+<list ICFeedback>
+</list>
+**************************************************************************************************************
+**************************************************************************************************************
+	TRIALS : TEST
+**************************************************************************************************************
+**************************************************************************************************************
+
+<trial choice>
+/ ontrialbegin = [
+
+	if (values.countConsecutiveCorrect == values.maxCorrectChoices){
+		list.ICFeedback.appenditem(values.countICFeedback);
+		values.reversal = 1;
+		values.countConsecutiveCorrect = 0;
+		values.helper = values.index_correctChoice;
+		values.index_correctChoice = values.index_incorrectChoice;
+		values.index_incorrectChoice = values.helper;
+		values.maxCorrectChoices = list.reversals.nextvalue;
+		if (monkey.monkeymode){
+			values.maxCorrectChoices = 4;
+		};
+		values.countReversals += 1;
+		values.relearned = 0;
+		values.countICFeedback = 0;
+	} else {
+		values.reversal = 0;
+	};
+	
+	values.counttrials += 1;
+	picture.correctStim.hposition = list.hpositions.nextvalue;
+	if (picture.correctStim.hposition == "25pct"){
+		values.correctChoicePosition = 1;
+		values.correctKey = parameters.leftKey;
+		values.incorrectKey = parameters.rightKey;
+	} else {
+		values.correctChoicePosition = 2;
+		values.correctKey = parameters.rightKey;
+		values.incorrectKey = parameters.leftKey;
+	};
+	picture.incorrectStim.hposition = list.hpositions.nextvalue;
+	
+	picture.correctStim_practice.hposition = picture.correctStim.hposition;
+	picture.incorrectStim_practice.hposition = picture.incorrectStim.hposition;
+	
+]
+/ stimulustimes = [0 = correctStim, correctStim_practice, incorrectStim, incorrectStim_practice, total]
+/ timeout = parameters.maxStimDuration
+/ validresponse = (parameters.leftKey, parameters.rightKey)
+/ correctresponse = (values.correctKey)
+/ ontrialend = [
+	if (trial.choice.correct){
+		values.feedback = list.correctChoiceFeedback.nextvalue;
+		picture.selected.hposition = picture.correctStim.hposition;
+		if (values.reversal == 1){
+			values.respCategory = "lucky guess";
+			values.countLG += 1;
+		} else if (values.relearned == 0){
+			values.relearned = 1;
+			values.respCategory = "C-RE";	
+			values.countC += 1;			
+		} else {
+			values.respCategory = "C";
+			values.countC += 1;			
+		};
+		
+		if (values.feedback == 1){
+			values.countICFeedback += 1;
+			if (values.respCategory == "lucky guess"){
+				values.respCategory = "lucky guess (PE)";
+			} else if (values.respCategory == "C-RE"){
+				values.respCategory = "C-RE (PE)";
+			} else {
+				values.respCategory = "PE";
+			};
+			values.totalPoints -= 1;
+		} else {
+			values.totalPoints += 1;
+		};
+		
+		values.countConsecutiveCorrect += 1;
+
+		
+	} else if (trial.choice.responsetext == values.incorrectKey){
+		values.feedback = list.incorrectChoiceFeedback.nextvalue;
+		picture.selected.hposition = picture.incorrectStim.hposition;			
+		if (values.relearned == 0){
+			values.respCategory = "RE";
+			values.countRE += 1;
+			if (values.feedback == 2){
+				values.totalPoints += 1;
+			} else {
+				values.totalPoints -= 1;
+			};				
+		} else {
+			values.countE += 1;
+			if (values.feedback == 2){
+				values.respCategory = "E-PE";
+				values.totalPoints += 1;
+			} else {
+				values.respCategory = "E";
+				values.totalPoints -= 1;
+			};			
+		};
+		
+		values.countConsecutiveCorrect = 0;
+	} else {
+		values.feedback = 1;
+		values.respCategory = "NR";
+		values.countConsecutiveCorrect = 0;
+		values.countNR += 1;
+		values.totalPoints -= 1;
+	};
+	
+	values.iti = parameters.SOA - trial.choice.latency - parameters.feedbackDuration;	
+	
+	if (values.phase == "practice"){
+		values.presentedCorrectStim = picture.correctStim_practice.currentitem;
+		values.presentedIncorrectStim = picture.incorrectStim_practice.currentitem;
+		if (values.reversal == 1){
+			values.stop = 1;
+		};	} else {
+		values.presentedCorrectStim = picture.correctStim.currentitem;
+		values.presentedIncorrectStim = picture.incorrectStim.currentitem;		
+	}]
+/ branch = [
+	return trial.feedback;
+]
+</trial>
+
+<trial feedback>
+/ ontrialbegin = [
+	picture.selected.skip = false;	if (values.respCategory == "NR"){
+		trial.feedback.insertstimulusframe(text.NRfeedback, 1);
+		picture.selected.skip = true;	};
+]
+/ stimulusframes = [1 = feedback, selected]
+
+/ validresponse = (parameters.leftKey, parameters.rightKey)//for touchscreens: add inactive response buttons
+/ isvalidresponse = [
+	return(false);
+]
+
+/ trialduration = parameters.feedbackDuration
+/ recorddata = false
+/ ontrialend = [
+	trial.feedback.resetstimulusframes();
+]
+/ branch = [
+	return trial.iti;
+]
+</trial>
+
+<trial iti>
+/ stimulusframes = [1 =clearscreen, fixation, total]
+
+/ validresponse = (parameters.leftKey, parameters.rightKey)//for touchscreens: add inactive response buttons
+/ isvalidresponse = [
+	return(false);
+]
+
+/ recorddata = false
+/ trialduration = values.iti
+/ branch = [
+	return trial.choice;
+]
+</trial>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	BLOCKS
+**************************************************************************************************************
+**************************************************************************************************************
+
+<block practice>
+/ stop = [
+	values.stop == 1;
+]
+/ onblockbegin = [
+	values.phase = "practice";
+	values.stop = 0;
+	values.index_correctChoice = list.practiceitemnumbers.nextvalue;
+	values.index_incorrectChoice = list.practiceitemnumbers.nextvalue;
+	values.reversal = 0;
+	values.countConsecutiveCorrect = 0;
+	values.countReversals = 0;
+	values.numberReversals = 0;
+	values.maxCorrectChoices = list.reversals.nextvalue;
+	if (monkey.monkeymode){
+		values.maxCorrectChoices = 4;
+	};
+	values.relearned = 1;
+	
+	picture.correctStim.skip = true;
+	picture.incorrectStim.skip = true;
+	picture.correctStim_practice.skip = false;
+	picture.incorrectStim_practice.skip = false;
+	
+	values.countICFeedback = 0;
+	
+]
+/ trials = [
+	1 = getReady; 
+	2 = choice;
+]
+/ onblockend = [
+	values.counttrials = 0;
+	values.countC = 0;
+	values.countLG = 0;
+	values.countE = 0;
+	values.countRE = 0;
+	values.countNR = 0;
+	values.totalPoints = 0;
+]
+/ timeout = parameters.practiceTimeout
+/ branch = [
+	if (values.stop == 0 && monkey.monkeymode == false){
+		values.passedPractice = 0;
+		return block.abortTask;
+	};
+]
+</block>
+
+<block abortTask>
+/ trials = [1 = finish]
+/ onblockend = [
+	values.abort = 1;
+	script.abort();
+]
+</block>
+
+<block testStart>
+/ preinstructions = (test)
+/ onblockbegin = [
+	values.phase = "test";
+]
+</block>
+
+<block testBlock>
+/ onblockbegin = [
+	values.countBlocks += 1;
+]
+/ trials = [1 = blockinfo]
+/ branch = [
+	return block.RL;
+]
+</block>
+
+<block RL>
+/ onblockbegin = [
+	values.index_correctChoice = list.itemnumbers.nextvalue;
+	values.index_incorrectChoice = list.itemnumbers.nextvalue;
+	values.reversal = 0;
+	values.countConsecutiveCorrect = 0;
+	values.countReversals = 0;
+	values.maxCorrectChoices = list.reversals.nextvalue;
+	if (monkey.monkeymode){
+		values.maxCorrectChoices = 4;
+	};
+	values.relearned = 1;
+	
+	picture.correctStim.skip = false;
+	picture.incorrectStim.skip = false;
+	picture.correctStim_practice.skip = true;
+	picture.incorrectStim_practice.skip = true;
+
+	values.countICFeedback = 0;	
+]
+/ trials = [
+	1 = getReady; 
+	2 = choice;
+]
+/ timeout = parameters.blockDuration
+/ onblockend = [
+	
+	if (values.countBlocks == 1){
+		values.countReversals_test1 = values.countReversals;	
+	} else if (values.countBlocks == 2){
+		values.countReversals_test2 = values.countReversals;		
+	} else if (values.countBlocks == 3){
+		values.countReversals_test3 = values.countReversals;	};
+
+]
+</block>
+
+<block finish>
+/ trials = [1 = finish]
+</block>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EXPERIMENT 
+**************************************************************************************************************
+**************************************************************************************************************
+
+<expt>
+/ preinstructions = (intro, intro2)
+/ onexptbegin = [
+	if (parameters.showTotalPoints == false){
+		text.total.skip = true;
+	};	
+]
+/ blocks = [
+	1 = practice;
+	2 = testStart;
+	3-5 = testBlock;
+	6 = finish;
+]
+</expt>
+
+**************************************************************************************************************
+												End of File
+**************************************************************************************************************
