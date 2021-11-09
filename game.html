@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
 
     <title>Game</title>
     <style>
@@ -31,8 +35,9 @@
         .main {
             height: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             justify-content: center;
+            align-items: center;
         }
 
         .images {
@@ -44,7 +49,7 @@
         }
 
         .images img {
-            max-width: 300px;
+            max-width: 100px;
         }
     </style>
 
@@ -52,15 +57,42 @@
 
 <body>
     <div class="main center">
-        <div class="images">
-            <!-- TODO: add random pictures, loading screen!! -->
-            <img id="img1" src="./images/stim1.jpg" />
-            <img id="face" style="visibility: hidden;" />
-            <img id="img2" src="./images/stim2.jpg" />
-            <!-- <img id="arrow" /> -->
+        <div class="container">
+            <div class="mb-2">
+                <img id="arrow1" src="./images/selected.png" style="visibility: hidden;">
+            </div>
+            <div>
+                <img height="300" id="img1" src="./images/stim1.jpg" />
+
+            </div>
+            
+    
         </div>
-        <p>Points : <span id="points">0</span></p>
+
+        <div class="images"> 
+            <!-- TODO: add random pictures, loading screen!! -->
+        <img id="face" height=70 src="./images/smiley.png" style="visibility: hidden;"/>
+        
+        </div>
+
+        <div class="container">
+            <div class="mb-2">
+                <img id="arrow2" src="./images/selected.png" style="visibility: hidden;">
+            </div>
+            <div>
+                <img height="300" id="img2" src="./images/stim2.jpg" />
+
+            </div>
+            
+    
+        </div>
+
+
     </div>
+    
+
+
+
     <script src="./game.js"></script>
 </body>
 
