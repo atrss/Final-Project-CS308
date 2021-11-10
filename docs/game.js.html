@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>game.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addPoints">addPoints</a></li><li><a href="global.html#checkIfBlockEnded">checkIfBlockEnded</a></li><li><a href="global.html#chooseImage">chooseImage</a></li><li><a href="global.html#choosePoint">choosePoint</a></li><li><a href="global.html#hideLoadingScreen">hideLoadingScreen</a></li><li><a href="global.html#moveExpired">moveExpired</a></li><li><a href="global.html#newPattern">newPattern</a></li><li><a href="global.html#prepareNextMove">prepareNextMove</a></li><li><a href="global.html#setStyle">setStyle</a></li><li><a href="global.html#showLoadingScreen">showLoadingScreen</a></li><li><a href="global.html#updatePoints">updatePoints</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">game.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+    checkReversal,
+    choosePoint,
+    chooseImage,
+    newPattern,
+} from "./functions.js";
+
+import { POINT_PROB, TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
+
+class Pattern {
+    constructor(ele, luck, arrow) {
+        this.ele = ele;
+        this.luck = luck;
+        this.arrow = arrow;
+        this.img_name;
+    }
+
+    get img() {
+        return this.img_name;
+    }
+
+    set img(i) {
+        this.img_name = i;
+        this.ele.src = `./images/${i}`;
+    }
+}
+
+const pattern1 = new Pattern(
+        document.getElementById("img1"),
+        null,
+        document.getElementById("arrow1")
+    ),
+    pattern2 = new Pattern(
+        document.getElementById("img2"),
+        null,
+        document.getElementById("arrow2")
+    ),
+    face = document.getElementById("face");
+
+let loading = false,
+    blocksCompleted = 0,
+    timeTakeninBlock = 0,
+    time = new Date().getTime(),
+    points = 0,
+    timeTaken = 0;
+
+[pattern1.img, pattern2.img] = newPattern();
+[pattern1.luck, pattern2.luck] = chooseImage();
+
+/**
+ * Shows the loading screen.
+ */
+const showLoadingScreen = () => {
+    loading = true;
+    document.getElementsByClassName("main")[0].style.visibility = "hidden";
+    document.getElementsByClassName("loading")[0].style.display = "block";
+};
+
+/**
+ * Hides the loading screen.
+ */
+const hideLoadingScreen = () => {
+    loading = false;
+    document.getElementsByClassName("main")[0].style.visibility = "visible";
+    document.getElementsByClassName("loading")[0].style.display = "none";
+};
+
+/**
+ *
+ * @returns Checks if current block as ended.
+ */
+const checkIfBlockEnded = () => {
+    return timeTakeninBlock &lt; TIME_IN_BLOCK;
+};
+
+/**
+ *
+ * @param {int} point - Add point to the total points and updates the points.
+ */
+const addPoints = (point) => {
+    points += point;
+    updatePoints();
+};
+
+/**
+ * Updates points on the DOM.
+ */
+const updatePoints = () => {
+    document.getElementById("points").textContent = points;
+};
+
+/**
+ * Checks if the current move has expired beyond the time.
+ */
+const moveExpired = () => {
+    console.log("moveExpired");
+    if (!loading &amp;&amp; new Date().getTime() - time > TIME_FOR_MOVE) {
+        setStyle(false, null);
+    }
+};
+
+/**
+ * Prepares for next move by hiding the arrows, and adds time taken in the previous move.
+ */
+const prepareNextMove = () => {
+    pattern1.arrow.visibility = "hidden";
+    pattern2.arrow.visibility = "hidden";
+    time = new Date().getTime();
+    timeTaken += time;
+    if (timeTaken > TIME_IN_BLOCK) {
+        // time for new block
+    }
+};
+
+/**
+ *
+ * @param {string} hasWon - if this is lucky show the smiley else the frown image.
+ * @param {string} key - which key the user pressed.
+ * This function shows the correct arrow after a correct move and loads the next move.
+ */
+const setStyle = (hasWon, key) => {
+    console.log("setStyle", hasWon, key);
+    const arrow =
+        key === "e" ? pattern1.arrow : key === "i" ? pattern2.arrow : null;
+    if (hasWon === "lucky") {
+        face.src = "./images/smiley.png";
+    } else {
+        face.src = "./images/frowny.jpg";
+    }
+
+    if (arrow !== null &amp;&amp; arrow.style.visibility == "hidden") {
+        arrow.style.visibility = "visible";
+        setTimeout(() => {
+            arrow.style.visibility = "hidden";
+        }, 300);
+    }
+
+    if (face.style.visibility == "hidden") {
+        face.style.visibility = "visible";
+        setTimeout(() => {
+            face.style.visibility = "hidden";
+        }, 300);
+    }
+
+    showLoadingScreen();
+    prepareNextMove();
+    hideLoadingScreen();
+};
+
+document.addEventListener("keydown", (e) => {
+    if (!loading &amp;&amp; (e.key === "e" || e.key === "i")) {
+        const key = e.key;
+        if (key === "e") {
+            const point = choosePoint(pattern1.luck);
+            setStyle(pattern1.luck, key);
+            addPoints(point);
+        } else {
+            const point = choosePoint(pattern2.luck);
+            setStyle(pattern2.luck, key);
+            addPoints(point);
+        }
+    }
+});
+
+// setInterval(moveExpired, 200);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Nov 10 2021 15:25:18 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

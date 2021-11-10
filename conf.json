@@ -1,0 +1,11 @@
+{
+    "source": {
+        "include": ["constants.js", "functions.js", "game.js"]
+    },
+    "opts": {
+        "template": "node_modules/docdash",
+        "encoding": "utf8",
+        "destination": "./docs/",
+        "recurse": true
+    }
+}
