@@ -47,10 +47,8 @@ let loading = false,
 [pattern1.img, pattern2.img] = newPattern();
 [pattern1.luck, pattern2.luck] = chooseImage();
 
-console.log([pattern1.luck, pattern2.luck]);
-
 /**
- * Shows the loading screen when the block is complete.
+ * Shows the loading screen.
  */
 const showLoadingScreen = () => {
     loading = true;
@@ -58,19 +56,26 @@ const showLoadingScreen = () => {
     document.getElementsByClassName("loading")[0].style.display = "block";
 };
 
+/**
+ * Hides the loading screen.
+ */
 const hideLoadingScreen = () => {
     loading = false;
     document.getElementsByClassName("main")[0].style.visibility = "visible";
     document.getElementsByClassName("loading")[0].style.display = "none";
 };
 
+/**
+ *
+ * @returns Checks if current block as ended.
+ */
 const checkIfBlockEnded = () => {
     return timeTakeninBlock < TIME_IN_BLOCK;
 };
 
 /**
  *
- * @param {int} point - Add point to the total points.
+ * @param {int} point - Add point to the total points and updates the points.
  */
 const addPoints = (point) => {
     points += point;
@@ -78,12 +83,15 @@ const addPoints = (point) => {
 };
 
 /**
- * Update points on the DOM.
+ * Updates points on the DOM.
  */
 const updatePoints = () => {
     document.getElementById("points").textContent = points;
 };
 
+/**
+ * Checks if the current move has expired beyond the time.
+ */
 const moveExpired = () => {
     console.log("moveExpired");
     if (!loading && new Date().getTime() - time > TIME_FOR_MOVE) {
@@ -91,6 +99,9 @@ const moveExpired = () => {
     }
 };
 
+/**
+ * Prepares for next move by hiding the arrows, and adds time taken in the previous move.
+ */
 const prepareNextMove = () => {
     pattern1.arrow.visibility = "hidden";
     pattern2.arrow.visibility = "hidden";
@@ -101,11 +112,16 @@ const prepareNextMove = () => {
     }
 };
 
+/**
+ *
+ * @param {string} hasWon - if this is lucky show the smiley else the frown image.
+ * @param {string} key - which key the user pressed.
+ * This function shows the correct arrow after a correct move and loads the next move.
+ */
 const setStyle = (hasWon, key) => {
-    // if (key === "")
+    console.log("setStyle", hasWon, key);
     const arrow =
         key === "e" ? pattern1.arrow : key === "i" ? pattern2.arrow : null;
-    console.log(arrow);
     if (hasWon === "lucky") {
         face.src = "./images/smiley.png";
     } else {
@@ -116,14 +132,14 @@ const setStyle = (hasWon, key) => {
         arrow.style.visibility = "visible";
         setTimeout(() => {
             arrow.style.visibility = "hidden";
-        }, 3000);
+        }, 300);
     }
 
     if (face.style.visibility == "hidden") {
         face.style.visibility = "visible";
         setTimeout(() => {
             face.style.visibility = "hidden";
-        }, 3000);
+        }, 300);
     }
 
     showLoadingScreen();
@@ -134,12 +150,14 @@ const setStyle = (hasWon, key) => {
 document.addEventListener("keydown", (e) => {
     if (!loading && (e.key === "e" || e.key === "i")) {
         const key = e.key;
-        if (key === "E") {
+        if (key === "e") {
+            const point = choosePoint(pattern1.luck);
             setStyle(pattern1.luck, key);
-            addPoints(choosePoint(pattern1.luck));
+            addPoints(point);
         } else {
+            const point = choosePoint(pattern2.luck);
             setStyle(pattern2.luck, key);
-            addPoints(choosePoint(pattern2.luck));
+            addPoints(point);
         }
     }
 });
