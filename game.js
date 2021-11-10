@@ -1,56 +1,56 @@
-const MIN = 60,
-    POINT_PROB = 0.8,
-    TIME_IN_BLOCK = 9 * MIN,
-    TIME_FOR_MOVE = 10 * 1000; // milliseconds
+import {
+    checkReversal,
+    choosePoint,
+    chooseImage,
+    newPattern,
+} from "./functions.js";
+
+import { POINT_PROB, TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
+
+class Pattern {
+    constructor(ele, luck, arrow) {
+        this.ele = ele;
+        this.luck = luck;
+        this.arrow = arrow;
+        this.img_name;
+    }
+
+    get img() {
+        return this.img_name;
+    }
+
+    set img(i) {
+        this.img_name = i;
+        this.ele.src = `./images/${i}`;
+    }
+}
+
+const pattern1 = new Pattern(
+        document.getElementById("img1"),
+        null,
+        document.getElementById("arrow1")
+    ),
+    pattern2 = new Pattern(
+        document.getElementById("img2"),
+        null,
+        document.getElementById("arrow2")
+    ),
+    face = document.getElementById("face");
 
 let loading = false,
     blocksCompleted = 0,
     timeTakeninBlock = 0,
-    time = new Date().getTime(), // new Date().getTime()
+    time = new Date().getTime(),
     points = 0,
-    timeTaken = 0,
-    pattern1 = null,
-    pattern2 = null;
+    timeTaken = 0;
 
-const img1 = document.getElementById("img1"),
-    img2 = document.getElementById("img2"),
-    face = document.getElementById("face"),
-    arrow1 = document.getElementById("arrow1"),
-    arrow2 = document.getElementById("arrow2");
+[pattern1.img, pattern2.img] = newPattern();
+[pattern1.luck, pattern2.luck] = chooseImage();
 
-const chooseImage = () => {
-    if (Math.random() > 0.5) {
-        return "lucky";
-    } else {
-        return "unlucky";
-    }
-};
-
-const choosePoint = (imageType) => {
-    const point = Math.random() > POINT_PROB ? 1 : -1;
-    if (imageType === "unlucky") {
-        point *= -1;
-    }
-    return point;
-};
-
-const newPattern = () => {
-    let selected = [];
-    while (selected.length != 2) {
-        const randomNo = Math.floor(Math.random() * 6);
-        if (selected.indexOf(randomNo) == -1) selected.push(randomNo);
-    }
-    return selected.forEach((v) => {
-        return `stim${v}.png`;
-    });
-};
-
-const checkReversal = () => {
-    const items = [10, 11, 12, 13, 14, 15];
-    return items[Math.floor(Math.random() * items.length)];
-};
-
-const showNextBlockLoadingScreen = () => {
+/**
+ * Shows the loading screen when the block is complete.
+ */
+const showLoadingScreen = () => {
     document.getElementsByClassName("main")[0].style.visibility = "hidden";
     document.getElementsByClassName("loading")[0].style.display = "block";
 };
@@ -59,18 +59,43 @@ const checkIfBlockEnded = () => {
     return timeTakeninBlock < TIME_IN_BLOCK;
 };
 
+/**
+ *
+ * @param {int} point - Add point to the total points.
+ */
 const addPoints = (point) => {
     points += point;
 };
 
+/**
+ * Update points on the DOM.
+ */
 const updatePoints = () => {
     document.getElementById("points").textContent = points;
 };
 
-const setStyle = (hasWon, key) => {
-    const arrow = key === "E" ? arrow1 : key === "I" ? arrow2 : null;
+const moveExpired = () => {
+    console.log("moveExpired");
+    if (!loading && new Date().getTime() - time > TIME_FOR_MOVE) {
+        setStyle(false, null);
+    }
+};
 
-    if (hasWon == true) {
+const prepareNextMove = () => {
+    pattern1.arrow.visibility = "hidden";
+    pattern2.arrow.visibility = "hidden";
+    time = new Date().getTime();
+    timeTaken += time;
+    if (timeTaken > TIME_IN_BLOCK) {
+        // time for new block
+    }
+};
+
+const setStyle = (hasWon, key) => {
+    const arrow =
+        key === "E" ? pattern1.arrow : key === "I" ? pattern2.arrow : null;
+
+    if (hasWon === true) {
         face.src = "./images/smiley.png";
     } else {
         face.src = "./images/frowny.jpg";
@@ -90,41 +115,20 @@ const setStyle = (hasWon, key) => {
         }, 3000);
     }
 
-    showNextBlockLoadingScreen();
+    showLoadingScreen();
     prepareNextMove();
 };
 
 document.addEventListener("keydown", (e) => {
     if (!loading && (e.key === "E" || e.key === "I")) {
-        console.log("pressed e/i");
-        setStyle(true, e.key);
+        const key = e.key;
+        setStyle(true, key);
+        if (key === "E") {
+            addPoints(choosePoint(pattern1.luck));
+        } else {
+            addPoints(choosePoint(pattern2.luck));
+        }
     }
 });
 
-const moveExpired = () => {
-    if (new Date().getTime() - time > TIME_FOR_MOVE) {
-        setStyle(false, null);
-    }
-};
-
-setInterval(moveExpired, 100);
-
-/*
-// game
-    // functions
-        // checkIfGameEnded
-        // nextBlock
-        // runAfterMove
-        // showBlackAfterMove
-        // a function to prepare next move
-
-    // logging
-        // functions
-            // initialise
-
-    // saving
-        // functions
-            // saveSummary
-            // saveRawData
-
-*/
+setInterval(moveExpired, 200);
