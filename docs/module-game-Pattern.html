@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>constants - Documentation</title>
+    <title>Pattern - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">constants</h1>
+    <h1 class="page-title">Pattern</h1>
     
 
     
@@ -44,6 +44,13 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="module-game.html">game</a>~</span>
+        
+        Pattern
+        </h2>
+        
+            <div class="class-description usertext"><p>Class representing a pattern image.</p></div>
         
     
 </header>
@@ -54,7 +61,183 @@
         
             
 
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="Pattern"><span class="type-signature"></span>new Pattern<span class="signature">(ele, luck, arrow)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="game.js.html">game.js</a>, <a href="game.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
+                <td class="name"><code>ele</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The image's element in the DOM.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>luck</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether it is lucky or unlucky.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>arrow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The arrow above the pattern in the DOM.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
         </div>
     
@@ -76,7 +259,7 @@
 
         
             
-<h4 class="name" id="~MILLI"><span class="type-signature">(inner, constant) </span>MILLI<span class="type-signature"> :number</span></h4>
+<h4 class="name" id="img"><span class="type-signature"></span>img<span class="type-signature"></span></h4>
 
 
 
@@ -87,7 +270,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line19">line 19</a>
+        <a href="game.js.html">game.js</a>, <a href="game.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -114,11 +297,6 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>1000</li>
-        </ul></dd>
-    
 
     
 
@@ -131,17 +309,11 @@
 
 
 
+<div class="description usertext">
+    <p>Return name of the image file for the pattern.</p>
+</div>
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
 
 
 
@@ -150,7 +322,7 @@
 
         
             
-<h4 class="name" id="~MIN"><span class="type-signature">(inner, constant) </span>MIN<span class="type-signature"> :number</span></h4>
+<h4 class="name" id="img"><span class="type-signature"></span>img<span class="type-signature"></span></h4>
 
 
 
@@ -161,155 +333,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line9">line 9</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>60</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="~POINT_PROB"><span class="type-signature">(inner, constant) </span>POINT_PROB<span class="type-signature"> :number</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line14">line 14</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>0.8</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="~TIME_FOR_MOVE"><span class="type-signature">(inner, constant) </span>TIME_FOR_MOVE<span class="type-signature"> :number</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line29">line 29</a>
+        <a href="game.js.html">game.js</a>, <a href="game.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -348,86 +372,11 @@
 
 
 
+<div class="description usertext">
+    <p>Sets name of image and <code>src</code> to image in <code>ele</code>.</p>
+</div>
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="~TIME_IN_BLOCK"><span class="type-signature">(inner, constant) </span>TIME_IN_BLOCK<span class="type-signature"> :number</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line24">line 24</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
 
 
 

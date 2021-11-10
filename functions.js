@@ -5,7 +5,7 @@
 import { POINT_PROB, TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
 
 /**
- *
+ * @function
  * @returns Return a random combination for two pattern images.
  */
 export const chooseImage = () => {
@@ -18,7 +18,7 @@ export const chooseImage = () => {
 };
 
 /**
- *
+ * @function
  * @param {string} imageType - Whether image is lucky or unlucky.
  * @returns The point given for selecting the image.
  */
@@ -32,7 +32,7 @@ export const choosePoint = (imageType) => {
 };
 
 /**
- *
+ * @function
  * @returns Filename of two new pattern images.
  */
 export const newPattern = () => {
