@@ -1,3 +1,7 @@
+/**
+ * @module
+ */
+
 import {
     checkReversal,
     choosePoint,

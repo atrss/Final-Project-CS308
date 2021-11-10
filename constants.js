@@ -1,3 +1,7 @@
+/**
+ * @module
+ */
+
 export const MIN = 60,
     POINT_PROB = 0.8,
     MILLI = 1000,

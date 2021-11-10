@@ -1,3 +1,7 @@
+/**
+ * @module
+ */
+
 import { POINT_PROB, TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
 
 /**
