@@ -1,11 +1,12 @@
 {
     "source": {
-        "include": ["constants.js", "functions.js", "game.js"]
+        "include": ["constants.js", "functions.js", "game.js", "README.md"]
     },
     "opts": {
         "template": "node_modules/docdash",
         "encoding": "utf8",
         "destination": "./docs/",
         "recurse": true
-    }
+    },
+    "plugins": ["plugins/markdown"]
 }
