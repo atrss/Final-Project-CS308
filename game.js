@@ -1,11 +1,29 @@
 const MIN = 60,
     POINT_PROB = 0.8,
-    TIME_IN_BLOCK = 9 * MIN;
+    TIME_IN_BLOCK = 9 * MIN,
+    TIME_FOR_MOVE = 10 * 1000; // milliseconds
+
+let loading = false,
+    blocksCompleted = 0,
+    timeTakeninBlock = 0,
+    time = new Date().getTime(), // new Date().getTime()
+    points = 0,
+    timeTaken = 0,
+    pattern1 = null,
+    pattern2 = null;
+
+const img1 = document.getElementById("img1"),
+    img2 = document.getElementById("img2"),
+    face = document.getElementById("face"),
+    arrow1 = document.getElementById("arrow1"),
+    arrow2 = document.getElementById("arrow2");
 
 const chooseImage = () => {
     if (Math.random() > 0.5) {
         return "lucky";
-    } else return "unlucky";
+    } else {
+        return "unlucky";
+    }
 };
 
 const choosePoint = (imageType) => {
@@ -33,7 +51,8 @@ const checkReversal = () => {
 };
 
 const showNextBlockLoadingScreen = () => {
-    // add loading screen
+    document.getElementsByClassName("main")[0].style.visibility = "hidden";
+    document.getElementsByClassName("loading")[0].style.display = "block";
 };
 
 const checkIfBlockEnded = () => {
@@ -44,17 +63,51 @@ const addPoints = (point) => {
     points += point;
 };
 
-const updatePoints = () => {};
+const updatePoints = () => {
+    document.getElementById("points").textContent = points;
+};
 
-let blocksCompleted = 0,
-    timeTakeninBlock = 0,
-    points = 0,
-    timeTaken = 0,
-    pattern1 = null,
-    pattern2 = null;
+const setStyle = (hasWon, key) => {
+    const arrow = key === "E" ? arrow1 : key === "I" ? arrow2 : null;
 
-const img1 = document.getElementById("img1"),
-    img2 = document.getElementById("img2");
+    if (hasWon == true) {
+        face.src = "./images/smiley.png";
+    } else {
+        face.src = "./images/frowny.jpg";
+    }
+
+    if (arrow !== null && arrow.style.visibility == "hidden") {
+        arrow.style.visibility = "visible";
+        setTimeout(() => {
+            arrow.style.visibility = "hidden";
+        }, 3000);
+    }
+
+    if (face.style.visibility == "hidden") {
+        face.style.visibility = "visible";
+        setTimeout(() => {
+            face.style.visibility = "hidden";
+        }, 3000);
+    }
+
+    showNextBlockLoadingScreen();
+    prepareNextMove();
+};
+
+document.addEventListener("keydown", (e) => {
+    if (!loading && (e.key === "E" || e.key === "I")) {
+        console.log("pressed e/i");
+        setStyle(true, e.key);
+    }
+});
+
+const moveExpired = () => {
+    if (new Date().getTime() - time > TIME_FOR_MOVE) {
+        setStyle(false, null);
+    }
+};
+
+setInterval(moveExpired, 100);
 
 /*
 // game
@@ -75,130 +128,3 @@ const img1 = document.getElementById("img1"),
             // saveRawData
 
 */
-
-const setStyle = (hasWon, key) => {
-    const face = document.getElementById("face");
-    const arrow =
-        key === "E"
-            ? document.getElementById("arrow1")
-            : key === "I"
-            ? document.getElementById("arrow2")
-            : null;
-
-    if (hasWon == true) {
-        face.src = "./images/smiley.png";
-    } else {
-        face.src = "./images/frowny.jpg";
-    }
-
-    if (arrow.style.visibility == "hidden") {
-        arrow.style.visibility = "visible";
-        setTimeout(() => {
-            arrow.style.visibility = "hidden";
-        }, 3000);
-    }
-
-    if (face.style.visibility == "hidden") {
-        face.style.visibility = "visible";
-        setTimeout(() => {
-            face.style.visibility = "hidden";
-        }, 3000);
-    }
-};
-
-document.addEventListener("keydown", (e) => {
-    /*
-    1. catch event if e or i pressed
-    2. calculate winner
-    
-    */
-    if (e.key == "E" || e.key == "I") {
-        console.log("pressed e/i");
-        // probFunction to check if it has won or lost --> tells us if face is smiley or frowny
-        // if smiley, then set face.src = ./images/smiley.png
-        // else set face.src = ./images/frowny.jpg
-        const hasWon = true;
-        const keyCode = e.key;
-        setStyle(hasWon, key);
-    }
-});
-
-const raw_data = () => {
-    return {
-        build: "",
-        computer: { platform: "" },
-        date: "",
-        time: "",
-        subject: "",
-        group: "",
-        script: {
-            sessionid: "",
-        },
-        blockcode: "",
-        blocknum: "",
-        trialcode: "",
-        trialnum: "",
-        values: {
-            countBlocks: "",
-            counttrials: "",
-            index_correctChoice: "",
-            index_incorrectChoice: "",
-            correctChoicePosition: "",
-            maxCorrectChoices: "",
-            reversal: "",
-            relearned: "",
-            respCategory: "",
-            countConsecutiveCorrect: "",
-            feedback: "",
-            countICFeedback: "",
-            countReversals: "",
-            totalPoints: "",
-            iti: "",
-        },
-        presentedCorrectStim: "",
-        presentedIncorrectStim: "",
-        response: "",
-        correct: "",
-        latency: "",
-    };
-};
-
-const summary_data = () => {
-    return {
-        computer: { platform: "" },
-        script: {
-            startdate: "",
-            starttime: "",
-            subjectid: "",
-            groupid: "",
-            sessionid: "",
-            elapsedtime: "",
-            completed: "",
-        },
-        values: {
-            passedPractice: "",
-            abort: "",
-            totalPoints: "",
-            counttrials: "",
-            countC: "",
-            countLG: "",
-            countE: "",
-            countRE: "",
-            countNR: "",
-            countBlocks: "",
-            countReversals_test1: "",
-            countReversals_test2: "",
-            countReversals_test3: "",
-        },
-        expressions: {
-            probC: "",
-            probLG: "",
-            probE: "",
-            probRE: "",
-            probNR: "",
-            MinICFeedback: "",
-            MaxICFeedback: "",
-            Mean_ICFeedback: "",
-        },
-    };
-};
