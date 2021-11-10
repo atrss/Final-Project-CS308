@@ -47,12 +47,21 @@ let loading = false,
 [pattern1.img, pattern2.img] = newPattern();
 [pattern1.luck, pattern2.luck] = chooseImage();
 
+console.log([pattern1.luck, pattern2.luck]);
+
 /**
  * Shows the loading screen when the block is complete.
  */
 const showLoadingScreen = () => {
+    loading = true;
     document.getElementsByClassName("main")[0].style.visibility = "hidden";
     document.getElementsByClassName("loading")[0].style.display = "block";
+};
+
+const hideLoadingScreen = () => {
+    loading = false;
+    document.getElementsByClassName("main")[0].style.visibility = "visible";
+    document.getElementsByClassName("loading")[0].style.display = "none";
 };
 
 const checkIfBlockEnded = () => {
@@ -65,6 +74,7 @@ const checkIfBlockEnded = () => {
  */
 const addPoints = (point) => {
     points += point;
+    updatePoints();
 };
 
 /**
@@ -92,10 +102,11 @@ const prepareNextMove = () => {
 };
 
 const setStyle = (hasWon, key) => {
+    // if (key === "")
     const arrow =
-        key === "E" ? pattern1.arrow : key === "I" ? pattern2.arrow : null;
-
-    if (hasWon === true) {
+        key === "e" ? pattern1.arrow : key === "i" ? pattern2.arrow : null;
+    console.log(arrow);
+    if (hasWon === "lucky") {
         face.src = "./images/smiley.png";
     } else {
         face.src = "./images/frowny.jpg";
@@ -117,18 +128,20 @@ const setStyle = (hasWon, key) => {
 
     showLoadingScreen();
     prepareNextMove();
+    hideLoadingScreen();
 };
 
 document.addEventListener("keydown", (e) => {
-    if (!loading && (e.key === "E" || e.key === "I")) {
+    if (!loading && (e.key === "e" || e.key === "i")) {
         const key = e.key;
-        setStyle(true, key);
         if (key === "E") {
+            setStyle(pattern1.luck, key);
             addPoints(choosePoint(pattern1.luck));
         } else {
+            setStyle(pattern2.luck, key);
             addPoints(choosePoint(pattern2.luck));
         }
     }
 });
 
-setInterval(moveExpired, 200);
+// setInterval(moveExpired, 200);

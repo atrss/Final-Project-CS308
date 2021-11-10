@@ -11,7 +11,7 @@ export const chooseImage = () => {
 
 export const choosePoint = (imageType) => {
     console.log("choosePoint");
-    const point = Math.random() > POINT_PROB ? 1 : -1;
+    let point = Math.random() > POINT_PROB ? 1 : -1;
     if (imageType === "unlucky") {
         point *= -1;
     }
