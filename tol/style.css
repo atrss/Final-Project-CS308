@@ -1,3 +1,5 @@
+
+
 .tol_canvas {
     width: 0vw;
     height: 80vh;
@@ -36,7 +38,7 @@
       font-family: 'Roboto', sans-serif;
       font-size: larger;
     }
-  .tol_peg_board {
+  .tol_goal_board {
     width: 30vw;
     height: 24vw;
     position:absolute;
