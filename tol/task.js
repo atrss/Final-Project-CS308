@@ -1,22 +1,32 @@
-//global variable to store the time for start of each attempt
+/**
+ * global variable to store the time for start of each attempt
+*/
 var problem_time_start = 0;
 
-//global variable to store the time for the ending of each attempt
+/**
+ * global variable to store the time for the ending of each attempt
+*/
 var problem_time_end = 0;
 
-//global variables used for intermediate calculations
+/**
+ * global variables used for intermediate calculations
+*/
 var firstmove=0;
 var first_move_time = 0;
 var move_start_time = 0;
 
-//The array moves stores the minimum number of moves for all the 12 problems
+/**
+ * The array moves stores the minimum number of moves for all the 12 problems
+*/
 var moves = [2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
 
-/*
-Function which returns the HTML code which corresponds to drawing the board
+/**
+ * Function which returns the HTML code which corresponds to drawing the board
 with the 3 pegs and the balls on them according to ball_placement
 ref indicates that the board has to be responsive(the board on which the user can move balls)
-*/
+ */
+
+
 var drawBoard = function(container, ball_placement, board_type) {
     var board = '<div class = tol_' + container + '><div class = tol_base></div>'
     if (container == 'your_board') {
@@ -52,7 +62,12 @@ var drawBoard = function(container, ball_placement, board_type) {
     board += '</div>'
     return board
 }
-
+/**
+-> This function excecutes the movement of balls across the pegs while adhering to different possible cases while transfer of balls
+-> it checks if a ball held or not, if the ball is held then is places the ball of the peg with the given peg_id passed as a parameter
+-> if the ball is not held, then it check if the peg has a ball or not and picks the ball if ball is present
+-> Along with these,it also facilitates the calculation of string which depicts what moves have been made of which ball to which peg for current move
+*/
 var tapPeg = function(peg_id) {
   var choice = Number(peg_id.slice(-1)) - 1
   var peg = original[choice]
@@ -97,7 +112,7 @@ var tapPeg = function(peg_id) {
   document.getElementById('main').innerHTML = b1;
 }
 
-/*
+/**
 Function which checks if two nested arrays are equal
 after every move, this function will be called to check if the configuration of user's board
 is equal to the target board
@@ -241,21 +256,34 @@ Function which shows the information about the user's current attempt
 var currInfo= function(){
   var problemno = problem+1
   var attempt = num_trials+1
-  var out = '<div class = "score_canva"><div>allowed moves:' + moves[problem] + '</div><div>attempt:' + attempt+ '</div><div>problem number:' + problemno + '</div><div>your moves:' + num_moves+ '</div></div>'
+  var out = '<div class = "score_canva"><div>Allowed Moves: ' + moves[problem] + '</div><div>Attempt: ' + attempt+ '</div><div>Problem Number: ' + problemno + '</div><div>Your Moves: ' + num_moves+ '</div></div>'
   return out
 }
 
+/*
+Function generates the different pages/board configurations for the game
+->case 1: if --> problem >= configurations.length
+->        This case shows that the problem number has exceeded the available problems in code i.e. the experiment has been finished and it  generates the page from where the results can be downloaded.
+
+-> case 2: preve_prob!= problem
+->        This case indicates that the current problem has been finished and provides a page with a button to load the next problem
+
+-> case 3: it compares the goal board and current board, and if they both match it says that the problem has been solved succesfully and moves towards the next problem
+
+-> case 4: This basically loads the game screen with Goal Board, Current Board, box for holding a ball along with the other details like number of attempts, allowed moves, problem number, number of moves played etc. 
+
+*/
 
 var getPractice = function() {
   if(problem>=configurations.length){
-    var feedback = '<div class = "text2"><h1>To download data press the button below. Your points is: '+ points +'</h1></div>'
+    var feedback = '<div class = "text2"><h1>To download the data for your experiment, press the button below. Your score for the experiment is: '+ points +'</h1></div>'
     var button = '<div><input type= "button" class="button-two" onclick = "onfinish()" value="Download"></input></div>'
     return feedback + button
   }
   else if(prev_prob!== problem){
     var probno = problem+1;
-    var text = '<div  class = "text2"><h1>the next problem is problem number '+ probno+'. <br> Press next to begin</h1></div>'
-    var button = '<div><input type= "button" class="button-two" onclick = "next()" value="Next" ></input></div>'
+    var text = '<div class = "centerv"> <div  class = "text2"><h1>the next problem is problem number '+ probno+'. <br> Press next to begin</h1></div>'
+    var button = '<div><input type= "button" class="button-two" onclick = "next()" value="Next" ></input></div></div>'
     return text + button
   }
   else if(checkEquality(original,configurations[problem])){
