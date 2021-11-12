@@ -19,12 +19,12 @@ export const chooseImage = () => {
 
 /**
  * @function
- * @param {string} imageType - Whether image is lucky or unlucky.
+ * @param {String} imageType - Whether image is lucky or unlucky.
  * @returns The point given for selecting the image.
  */
 export const choosePoint = (imageType) => {
     console.log("choosePoint");
-    let point = Math.random() > POINT_PROB ? 1 : -1;
+    let point = Math.random() < POINT_PROB ? 1 : -1;
     if (imageType === "unlucky") {
         point *= -1;
     }
