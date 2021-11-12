@@ -161,7 +161,7 @@ function onfail(){
     attempts_time.push(-1);
     problem_time_start = new Date().getTime();
     move_start_time = new Date().getTime();
-    excecution_time.push(-1);
+    //excecution_time.push(-1);
     if(first_move.length > num_trials) {
       first_move.pop();
     }
@@ -216,9 +216,25 @@ function onfinish(){
   num_trials=0;
   problem=0;
 
+  // adding excecution time = time solution - first move time
+  for(var i = 0; i<first_move_times.length; i++){
+    var tmp = [];
+    for(var j=0; j<first_move_times[i].length; j++){
+      if(first_move_times[i][j] === -1){
+        tmp.push(-1);
+      }else{
+        tmp.push(problem_times[i][j] - first_move_times[i][j]);
+      }
+    }
+    excecution_time.push(tmp);
+  }
+
+
+
   console.log("problem times: ", problem_times);
   console.log("first move time: " , first_move_times);
-  console.log("all moves: ", str_allmove_exp)
+  console.log("all moves: ", str_allmove_exp);
+  console.log("exxcecution time: ", excecution_time);
   download_csv_file();
 }
 
