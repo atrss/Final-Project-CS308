@@ -16,14 +16,19 @@ var first_move_time = 0;
 var move_start_time = 0;
 
 /**
- * The array moves stores the minimum number of moves for all the 12 problems
+ * @var - The array moves stores the minimum number of moves for all the 12 problems
 */
 var moves = [2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
 
 /**
+ * @returns - HTML of the board with 3 pegs 
+ * @param {string} container - Type of the board(user board or goal board)
+ * @param {array} ball_placement - Nested array which contains arrangements of the balls on the 3 pegs
+ * @param {string} board_type - Type of the board(ref board-movable or not)
+
  * Function which returns the HTML code which corresponds to drawing the board
-with the 3 pegs and the balls on them according to ball_placement
-ref indicates that the board has to be responsive(the board on which the user can move balls)
+with the 3 pegs and the balls on them according to ball_placement ref indicates that the board has to be responsive(the board on which the user can move balls)
+
  */
 var drawBoard = function(container, ball_placement, board_type) {
     var board = '<div class = tol_' + container + '><div class = tol_base></div>'
@@ -66,6 +71,7 @@ var drawBoard = function(container, ball_placement, board_type) {
 -> it checks if a ball held or not, if the ball is held then is places the ball of the peg with the given peg_id passed as a parameter
 -> if the ball is not held, then it check if the peg has a ball or not and picks the ball if ball is present
 -> Along with these,it also facilitates the calculation of string which depicts what moves have been made of which ball to which peg for current move
+@param {Number} peg_id - the identifier for the specific peg
 */
 var tapPeg = function(peg_id) {
   var choice = Number(peg_id.slice(-1)) - 1
@@ -112,9 +118,13 @@ var tapPeg = function(peg_id) {
 }
 
 /**
+ * @returns - true if both the arrays are equal and false if both the arrays are unequal
  * Function which checks if two nested arrays are equal
 after every move, this function will be called to check if the configuration of user's board
 is equal to the target board
+@param {array} arr1- first input array
+@param {array} arr2- second input array
+
 */
 var checkEquality = function(arr1, arr2) {
   if (arr2.length !== arr1.length){
@@ -251,6 +261,7 @@ function next(){
 /** 
 Function which shows the information about the user's current attempt
 ->Shows the problem number, the attempt number, the allowed number of moves and the user's current number of moves.
+@returns - The HTML code corresponding to the information displayed along with the problem
 */
 var currInfo= function(){
   var problemno = problem+1
@@ -258,6 +269,7 @@ var currInfo= function(){
   var out = '<div class = "score_canva"><div>Allowed Moves: ' + moves[problem] + '</div><div>Attempt: ' + attempt+ '</div><div>Problem Number: ' + problemno + '</div><div>Your Moves: ' + num_moves+ '</div></div>'
   return out
 }
+
 
 /** 
 Function generates the different pages/board configurations for the game
@@ -270,6 +282,7 @@ Function generates the different pages/board configurations for the game
 -> case 3: it compares the goal board and current board, and if they both match it says that the problem has been solved succesfully and moves towards the next problem
 
 -> case 4: This basically loads the game screen with Goal Board, Current Board, box for holding a ball along with the other details like number of attempts, allowed moves, problem number, number of moves played etc. 
+* @returns - the HTML code corresponding to a trial
 */
 var getPractice = function() {
   if(problem>=configurations.length){
