@@ -1,3 +1,128 @@
+ 
+ html, body {
+  height: 100%;
+} 
+.htp{
+  width: 60%;
+  border: 2px solid darkblue;
+  padding: 50px;
+  margin: auto;
+  position:relative;
+  margin-bottom: 30px;
+}
+
+.score_canva{
+  width: 30%;
+  background-color: rgba(94, 182, 255, 0.494);
+  border: 2px solid darkblue;
+  padding: 50px;
+  margin: auto;
+  position:relative;
+  margin-bottom: 30px;  
+
+
+}
+
+/* button{
+  color:#fff;
+  text-align: center;
+  padding: 20px;
+}
+
+p{
+  color:#fff;
+  text-align: center;
+  padding-top: 500px;
+  font-size: 10px;
+}
+
+a{
+   text-decoration:none;
+   color:#fff;
+}
+
+a:hover{
+   color:#2ecc71;
+}
+
+.main{
+  width: 100%;
+}
+
+.sub-main{
+  width: 30%;
+  margin:22px;
+  float: left;
+}
+
+.button-one, .button-two, .button-three{
+  text-align: center;
+  cursor: pointer;
+  font-size:24px;
+  margin: 0 0 0 100px;
+}
+
+
+
+/*Button One*/
+.button-one {
+  padding:20px 60px;
+  outline: none;
+  background-color: #27ae60;
+  border: none;
+  border-radius:5px;
+  box-shadow: 0 9px #95a5a6;
+}
+
+.button-one:hover{
+  background-color: #2ecc71;
+}
+
+.button-one:active {
+  background-color: #2ecc71;
+  box-shadow: 0 5px #95a5a6;
+  transform: translateY(4px);
+}
+
+
+/*Button Two*/
+.button-two {
+  border-radius: 4px;
+  color: white;
+  font-weight: 600;
+  background-color:#0b68b4;
+  border: none;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+}
+
+
+.button-two span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button-two span:after {
+  content: '»';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button-two:hover span {
+  padding-right: 25px;
+}
+
+.button-two:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
 
 
 .tol_canvas {
@@ -10,12 +135,15 @@
     transform: translate(-50%,-50%);
   }
   .instruct{
+    margin:auto;
     height: 90%;
     width: 80%;
     background-color: rgb(127, 204, 255);
     text-align: center;
-    margin:auto;
+    position: relative;
     border-radius: 15px;
+    padding: 50px;
+    margin-top:3rem;
 
 
     }
@@ -34,6 +162,13 @@
     padding: 0;
   }
   .text2{
+    width: 70%;
+    background-color: rgba(94, 182, 255, 0.494);
+    border: 2px solid darkblue;
+    padding: 50px;
+    margin: auto;
+    position:relative;
+    margin-bottom: 30px;  
       font-weight: 650;
       font-family: 'Roboto', sans-serif;
       font-size: larger;

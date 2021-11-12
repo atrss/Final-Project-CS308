@@ -5,11 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-   
-    <title>Tower of London</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>Tower of London Task</title>
 </head>
 <body>
-    <div id="main"><button type="button" onclick="next()">start</button></div>
+    <div id="main" class="instruct">
+
+        <h1> Objective of Game</h1>
+        <p class="p-2 m-2">Every problem has two images: Goal and Current Board. You have to match Your Current Board with the Goal.</p>
+        <hr>
+
+        <div class="htp">
+            <h1 class="mt-0">How To Play???</h1>
+            <p class="p-2 m-2 text-left">
+                <ul>
+                    <li> Now click on the peg from which you want to take the ball</li>
+                    <li> Now the ball will move to Current Ball</li>
+                    <li> Now click on the peg you want to place the ball to.</li>
+                </ul>
+                In this way, move balls such that goal and current board match.
+            </p>
+        </div>
+        
+        
+        
+        <button type="button" class="button-two" onclick="next()">start</button>
+    
+    </div>
 
 </body>
 <script type="text/javascript" src="task.js" ></script>
