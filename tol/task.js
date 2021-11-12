@@ -27,8 +27,8 @@ var drawBoard = function(container, ball_placement, board_type) {
       board += '<div class = tol_board_label><strong>Goal</strong></div>'
     }
     for (var p = 0; p < 3; p++) {
-      board += '<div id = tol_peg_' + (p + 1) + '><div class = tol_peg></div></div>' 
-      
+      board += '<div id = tol_peg_' + (p + 1) + '><div class = tol_peg></div></div>'
+
       if (board_type == 'ref') {
         if (ball_placement[p][0] === 0 & held_ball === 0) {
           board += '<div id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
@@ -37,7 +37,7 @@ var drawBoard = function(container, ball_placement, board_type) {
         } else {
           board += '<div class = special id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
         }
-      } 
+      }
       else {
         board += '<div id = tol_peg_' + (p + 1) + ' >'
       }
@@ -124,9 +124,16 @@ function onsuccess(){
    problem_times.push(attempts_time);
    //excecution_time.push(timeTaken-first_move.slice(-1));
    first_move_times.push(first_move);
+   str_allmove_level.push(str_allmove_attempt);
+   str_allmove_exp.push(str_allmove_level);
+  //  if(str_allmove_attempt.length > 0){
+  //   str_allmove_level.push(str_allmove_attempt);
+  //   str_allmove_attempt = [];
+  // }
+   str_allmove_attempt = [];
+   str_allmove_level = [];
 
 
-  
   original = [
     [1, 2, 0],
     [3, 0],
@@ -153,6 +160,7 @@ function onfail(){
   if(num_trials <= 2){
     attempts_time.push(-1);
     problem_time_start = new Date().getTime();
+    move_start_time = new Date().getTime();
     excecution_time.push(-1);
     if(first_move.length > num_trials) {
       first_move.pop();
@@ -161,6 +169,13 @@ function onfail(){
   }if(num_trials > 2){
     first_move = [-1,-1,-1];
   }
+
+  if(str_allmove_attempt.length > 0){
+    str_allmove_level.push(str_allmove_attempt);
+    str_allmove_attempt = [];
+  }
+
+
   original = [
     [1, 2, 0],
     [3, 0],
@@ -189,7 +204,8 @@ function onfinish(){
   Experiment_time_end = new Date().getTime();
   var exp_time = (Experiment_time_end - Experiment_time_start) / 1000;
   console.log("Total time taken is:", exp_time);
-  
+
+
   original = [
     [1, 2, 0],
     [3, 0],
@@ -202,14 +218,16 @@ function onfinish(){
 
   console.log("problem times: ", problem_times);
   console.log("first move time: " , first_move_times);
+  console.log("all moves: ", str_allmove_exp)
   download_csv_file();
 }
 
 function next(){
   prev_prob = problem;
   problem_time_start = new Date().getTime();
+  move_start_time = new Date().getTime();
   attempts_time = [];
-  
+
   movestring ="";
   curr_data = [0,0,0,0,0,movestring,0,0,0,0,0,1,problem+1,moves[problem],0,0,points]
   var b1 = getPractice();
@@ -226,6 +244,10 @@ var currInfo= function(){
 var getPractice = function() {
   if(problem === 0){
     Experiment_time_start = new Date().getTime();
+    if(str_allmove_level.length > 0){
+      str_allmove_exp.push(str_allmove_level);
+      str_allmove_level = [];
+    }
   }
   if(problem>=configurations.length){
     var feedback = '<div><h1>To download data press the button below. Your points- '+ points +'</h1></div>'
@@ -234,7 +256,12 @@ var getPractice = function() {
   }
   else if(prev_prob!== problem){
     first_move = [];
-    var probno = problem+1;    
+    if(str_allmove_level.length > 0){
+      str_allmove_exp.push(str_allmove_level);
+      str_allmove_level = [];
+    }
+
+    var probno = problem+1;
     var text = '<div><h1>the next problem is problem number'+ probno+'. Press next to begin</h1></div>'
     var button = '<div><input type= "button" onclick = "next()">next</input></div>'
     return button +text
@@ -374,41 +401,41 @@ var movestring = "";
 // 2 - peg it was moved to //
 // 3 - choice start (abs)
 // 4 - choice end (abs)
-// 5 - move string //
-// 6 - excess moves//
-// 7 - your moves//
+// 5 - move string //     1
+// 6 - excess moves//     1
+// 7 - your moves//       1
 // ----each attempt
-// 8 - first move time
-// 9 - execution time
-// 10 - solution time
-// 11 - number of attempts //
+// 8 - first move time    1
+// 9 - execution time     0
+// 10 - solution time     1
+// 11 - no of attempts // 1
 // ----each prob
-// 12 - problem number //
-// 13 - min moves //
-// 14 - true/false //
-// 15 - problem score //
-// 16 - total score //
+// 12 - problem number // 1
+// 13 - min moves //      0
+// 14 - true/false //     1
+// 15 - problem score //  1
+// 16 - total score //    1
 
 
 
 
 
 
-var data = [];  
+var data = [];
 var curr_data = [];
 
-function download_csv_file() {  
+function download_csv_file() {
 
-   var csv = 'move_exec_time,last_disc,peg_to,choice_start,choice_end,moves,excess_moves,your_moves,first_move_time,exec_time,sol_time,attempt_no,prob_no,min_moves,success,prob_score,total_score\n';  
+   var csv = 'move_exec_time,last_disc,peg_to,choice_start,choice_end,moves,excess_moves,your_moves,first_move_time,exec_time,sol_time,attempt_no,prob_no,min_moves,success,prob_score,total_score\n';
 
-   data.forEach(function(row) {  
-           csv += row.join(',');  
-           csv += "\n";  
+   data.forEach(function(row) {
+           csv += row.join(',');
+           csv += "\n";
    });
 
-   var hiddenElement = document.createElement('a');  
-   hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);  
-   hiddenElement.target = '_blank';  
-   hiddenElement.download = 'TOL.csv';  
-   hiddenElement.click();  
-}  
+   var hiddenElement = document.createElement('a');
+   hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+   hiddenElement.target = '_blank';
+   hiddenElement.download = 'TOL.csv';
+   hiddenElement.click();
+}
