@@ -12,6 +12,13 @@ var first_move_times = [];
 var first_move = []
 var first_move_time = 0;
 
+var allmove = 0;
+var str_allmove_level = [];
+var str_allmove_attempt = [];
+var str_allmove_exp = [];
+
+var move_start_time = 0;
+
 var drawBoard = function(container, ball_placement, board_type) {
     var board = '<div class = tol_' + container + '><div class = tol_base></div>'
     if (container == 'your_board') {
@@ -65,10 +72,19 @@ var tapPeg = function(peg_id) {
       peg[open_spot] = held_ball
       curr_data[1] = colors[held_ball-1]
       curr_data[2] = choice + 1
+
+      var t1 = new Date().getTime();
+      var t2 = t1 - move_start_time;
+      t2 /= 1000;
+      str_allmove_attempt.push(t2);
+      move_start_time = new Date().getTime();
+
+
       movestring = movestring + colors[held_ball-1].slice(0,1)+peg_id.slice(-1);
       curr_data[5] = movestring;
       held_ball = 0
-      if(num_moves === 0){
+      if(num_moves === 0 && num_trials <= 2){
+        move_start_time = new Date().getTime();
         first_move_time = new Date().getTime();
         var firstmove = (first_move_time - problem_time_start) /1000 ;
         first_move.push(firstmove);
@@ -134,11 +150,17 @@ function onsuccess(){
 function onfail(){
   // problem_time_end = new Date().getTime();
   // var timeTaken = (problem_time_end - problem_time_start) / 1000;
-  attempts_time.push(-1);
-  problem_time_start = new Date().getTime();
-  excecution_time.push(-1);
-  first_move.push(-1);
-
+  if(num_trials <= 2){
+    attempts_time.push(-1);
+    problem_time_start = new Date().getTime();
+    excecution_time.push(-1);
+    if(first_move.length > num_trials) {
+      first_move.pop();
+    }
+    first_move.push(-1);
+  }if(num_trials > 2){
+    first_move = [-1,-1,-1];
+  }
   original = [
     [1, 2, 0],
     [3, 0],
@@ -211,6 +233,7 @@ var getPractice = function() {
     return feedback + button
   }
   else if(prev_prob!== problem){
+    first_move = [];
     var probno = problem+1;    
     var text = '<div><h1>the next problem is problem number'+ probno+'. Press next to begin</h1></div>'
     var button = '<div><input type= "button" onclick = "next()">next</input></div>'
