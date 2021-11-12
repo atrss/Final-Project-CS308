@@ -25,8 +25,6 @@ var moves = [2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
 with the 3 pegs and the balls on them according to ball_placement
 ref indicates that the board has to be responsive(the board on which the user can move balls)
  */
-
-
 var drawBoard = function(container, ball_placement, board_type) {
     var board = '<div class = tol_' + container + '><div class = tol_base></div>'
     if (container == 'your_board') {
@@ -62,6 +60,7 @@ var drawBoard = function(container, ball_placement, board_type) {
     board += '</div>'
     return board
 }
+
 /**
 -> This function excecutes the movement of balls across the pegs while adhering to different possible cases while transfer of balls
 -> it checks if a ball held or not, if the ball is held then is places the ball of the peg with the given peg_id passed as a parameter
@@ -113,7 +112,7 @@ var tapPeg = function(peg_id) {
 }
 
 /**
-Function which checks if two nested arrays are equal
+ * Function which checks if two nested arrays are equal
 after every move, this function will be called to check if the configuration of user's board
 is equal to the target board
 */
@@ -134,7 +133,7 @@ var checkEquality = function(arr1, arr2) {
   return true;
 }
 
-/*
+/**
 Function that will be executed when the user's attempt is successful 
 ->calculates the time for this attempt
 ->appends the time for this problem to problem_times
@@ -173,7 +172,7 @@ function onsuccess(){
   document.getElementById('main').innerHTML = b1;
 }
 
-/*
+/** 
 Function that will be executed when the user's attempt is unsuccessful
 ->Resets the variable problem_time_start for the next attempt if the previous attempt is not the last attempt
 ->Also resets move_start_time
@@ -212,7 +211,7 @@ function onfail(){
   document.getElementById('main').innerHTML = b1;
 }
 
-/*
+/** 
 This function will be called when the experiment is finished and the download button is pressed by the user.
 ->Calculates the total time for the experiment
 ->Resets all the global variables
@@ -233,7 +232,7 @@ function onfinish(){
   download_csv_file();
 }
 
-/*
+/** 
 The next function will be called at the start of the next problem.
 ->Resets movestring, problem_time_start and move_start_time for the next problem and move
 ->Initializes the row to be appended in the .csv file
@@ -249,7 +248,7 @@ function next(){
   document.getElementById('main').innerHTML = b1;
 }
 
-/*
+/** 
 Function which shows the information about the user's current attempt
 ->Shows the problem number, the attempt number, the allowed number of moves and the user's current number of moves.
 */
@@ -260,7 +259,7 @@ var currInfo= function(){
   return out
 }
 
-/*
+/** 
 Function generates the different pages/board configurations for the game
 ->case 1: if --> problem >= configurations.length
 ->        This case shows that the problem number has exceeded the available problems in code i.e. the experiment has been finished and it  generates the page from where the results can be downloaded.
@@ -271,18 +270,16 @@ Function generates the different pages/board configurations for the game
 -> case 3: it compares the goal board and current board, and if they both match it says that the problem has been solved succesfully and moves towards the next problem
 
 -> case 4: This basically loads the game screen with Goal Board, Current Board, box for holding a ball along with the other details like number of attempts, allowed moves, problem number, number of moves played etc. 
-
 */
-
 var getPractice = function() {
   if(problem>=configurations.length){
-    var feedback = '<div class = "text2"><h1>To download the data for your experiment, press the button below. Your score for the experiment is: '+ points +'</h1></div>'
-    var button = '<div><input type= "button" class="button-two" onclick = "onfinish()" value="Download"></input></div>'
+    var feedback = '<div class="centerv"> <div class = "text2"><h1>To download the data for your experiment, press the button below. Your score for the experiment is: '+ points +'</h1></div>'
+    var button = '<div><input type= "button" class="button-two" onclick = "onfinish()" value="Download"></input></div></div>'
     return feedback + button
   }
   else if(prev_prob!== problem){
     var probno = problem+1;
-    var text = '<div class = "centerv"> <div  class = "text2"><h1>the next problem is problem number '+ probno+'. <br> Press next to begin</h1></div>'
+    var text = '<div class="centerv">  <div  class = "text2"><h1>the next problem is problem number '+ probno+'. <br> Press next to begin</h1></div>'
     var button = '<div><input type= "button" class="button-two" onclick = "next()" value="Next" ></input></div></div>'
     return text + button
   }
@@ -314,21 +311,29 @@ var getPractice = function() {
       hold_box =
         '<div class = tol_hand_box></div><div class = tol_hand_label><strong>Current ball</strong></div>'
     }
-    var button = '<div><br><br><input type= "button" class="button-two" onclick = "onfail()" value="Reset"></input></div>'
+    var button = '<div class="reset"><input type= "button" class="button-two" onclick = "onfail()" value="Reset"></input></div>'
     return canvas + currinfo + referenceBoard + goal + hold_box + button
   }
 }
 
-//The variable prev_prob stores the number for the previous problem
+/**
+ * The variable prev_prob stores the number for the previous problem
+ */
 var prev_prob =0;
 
-// The variable points stores the total points for the experiment
+/** 
+ *  The variable points stores the total points for the experiment
+ */
 var points = 0;
 
-//The variable problem stores the current problem number(0 for the 1st problem, 1 for the 2nd problem and so on)
+/**
+ * The variable problem stores the current problem number(0 for the 1st problem, 1 for the 2nd problem and so on)
+*/
 var problem = 0;
 
-//The variable configurations stores the arrangements of the target board for all the 12 problems
+/**
+ * The variable configurations stores the arrangements of the target board for all the 12 problems
+ */
 var configurations = [
   [
     [0, 0, 0],
@@ -393,19 +398,27 @@ var configurations = [
 ];
 
 
-//The array moves stores the minimum number of moves for all the 12 problems
+/**
+ * The array moves stores the minimum number of moves for all the 12 problems
+ */
 var moves = [2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
 
-//The variable num_moves stores the number of moves for the current attempt
+/**
+ * The variable num_moves stores the number of moves for the current attempt
+ */
 var num_moves = 0;
 
-//The variable num_trials stores the number of attempts for the current problem
+/**
+ * The variable num_trials stores the number of attempts for the current problem
+ */
 var num_trials =0;
 
-//the colors array will have green at the 0th index, red at the 1st index and blue at the 2nd index
+/**
+ * the colors array will have green at the 0th index, red at the 1st index and blue at the 2nd index
+ */
 var colors = ['Green', 'Red', 'Blue'];
 
-/*
+/** 
 The variable original is an array which stores the original configuration for the board of the user
 The first list [1,2,0] stores the arrangement for the first peg(the peg with the maximum height)
 (green ball at the bottom, red ball above it and empty space at the top- 0 denotes empty space)
@@ -417,12 +430,16 @@ var original = [
   [0]
 ];
 
-//held_ball is an integer variable denotes the state if a ball is currently held by the user.
-// held_ball is 1 if the user currently holds a ball
-// else it is zero
+/**
+ * held_ball is an integer variable denotes the state if a ball is currently held by the user.
+ * held_ball is 1 if the user currently holds a ball
+ * else it is zero
+*/
 var held_ball = 0;
 
-// stores the moves executed by the user( Eg-"B2R3" indicates that the blue ball (B) was moved to peg 2 (center) and the red ball (R) was moved to peg 3 (right).)
+/**
+ *  stores the moves executed by the user( Eg-"B2R3" indicates that the blue ball (B) was moved to peg 2 (center) and the red ball (R) was moved to peg 3 (right).)
+*/
 var movestring = "";
 
 
@@ -447,15 +464,17 @@ var movestring = "";
 // 15 - problem score
 // 16 - total score
 
-//data stores the content of the entire csv file
+/**
+ * data stores the content of the entire csv file
+ */
 var data = [];
 
-/*
+/** 
 curr_data stores the current row of the csv file
 */
 var curr_data = [];
 
-/*
+/** 
 Function invoked by the call in on_finish function, downloads the csv file containing data of the experiment 
 ->adds commas for the csv format in each row
 ->names the columns
