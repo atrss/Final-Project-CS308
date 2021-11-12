@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>pattern.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,45 +32,52 @@
 
 <div id="main">
     
+    <h1 class="page-title">pattern.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @class
+ * Class representing a pattern image.
+ */
+export class Pattern {
+    /**
+     *
+     * @param {HTMLElement} ele  - The image's element in the DOM.
+     * @param {String} luck - Whether it is lucky or unlucky.
+     * @param {HTMLElement} arrow - The arrow above the pattern in the DOM.
+     */
+    constructor(ele, luck, arrow) {
+        this.ele = ele;
+        this.luck = luck;
+        this.arrow = arrow;
+        this.img_name;
+    }
 
+    /**
+     * Return name of the image file for the pattern.
+     */
+    get img() {
+        return this.img_name;
+    }
 
-    <section class="package">
-        <h3> </h3>		
-    </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    <section class="readme usertext">
-        <article><h1>Web-based version of the probabilistic reversal-learning task and Tower of London task (Executive functioning segment)</h1>
-<h2>TA: Harsh Katakwar</h2>
-<h2>Mentor: Akash K Rao/Shashank Uttrani</h2>
-<p>The probabilistic reversal-learning task and the Tower of London task are standard psychological tests for evaluating an individual's executive functioning and attentional control abilities. The web-based applications will be used for collecting data and for building cognitive models to predict human behavior in these tasks.</p>
-<p>https://www.millisecond.com/download/library/toweroflondon/</p>
-<p>https://www.millisecond.com/download/library/reversallearning/probabilisticreversallearningtask/</p>
-<h2>Docs</h2>
-<pre class="prettyprint source lang-bash"><code>npm install jsdoc docdash
+    /**
+     * Sets name of image and `src` to image in `ele`.
+     */
+    set img(i) {
+        this.img_name = i;
+        this.ele.src = `./images/${i}`;
+    }
+}
 </code></pre>
-<pre class="prettyprint source lang-bash"><code>jsdoc -c conf.json
-</code></pre></article>
+        </article>
     </section>
-
-
 
 
 

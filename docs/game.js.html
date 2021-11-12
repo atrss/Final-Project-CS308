@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module-game-Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#.newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~checkIfBlockEnded">checkIfBlockEnded</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~moveExpired">moveExpired</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#~chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#~newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~checkIfBlockEnded">checkIfBlockEnded</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -47,46 +47,14 @@
  */
 
 import {
-    checkReversal,
+    chooseReversal,
     choosePoint,
-    chooseImage,
-    newPattern,
+    startGame,
+    moveExpired,
 } from "./functions.js";
 
-import { POINT_PROB, TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
-
-/**
- * Class representing a pattern image.
- */
-class Pattern {
-    /**
-     *
-     * @param {HTMLElement} ele  - The image's element in the DOM.
-     * @param {string} luck - Whether it is lucky or unlucky.
-     * @param {HTMLElement} arrow - The arrow above the pattern in the DOM.
-     */
-    constructor(ele, luck, arrow) {
-        this.ele = ele;
-        this.luck = luck;
-        this.arrow = arrow;
-        this.img_name;
-    }
-
-    /**
-     * Return name of the image file for the pattern.
-     */
-    get img() {
-        return this.img_name;
-    }
-
-    /**
-     * Sets name of image and `src` to image in `ele`.
-     */
-    set img(i) {
-        this.img_name = i;
-        this.ele.src = `./images/${i}`;
-    }
-}
+import { Pattern } from "./pattern.js";
+import { TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
 
 const pattern1 = new Pattern(
         document.getElementById("img1"),
@@ -105,10 +73,10 @@ let loading = false,
     timeTakeninBlock = 0,
     time = new Date().getTime(),
     points = 0,
-    timeTaken = 0;
+    timeTaken = 0,
+    timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
-[pattern1.img, pattern2.img] = newPattern();
-[pattern1.luck, pattern2.luck] = chooseImage();
+[pattern1, pattern2] = startGame();
 
 /**
  * Shows the loading screen.
@@ -129,16 +97,12 @@ const hideLoadingScreen = () => {
 };
 
 /**
- *
  * @returns Checks if current block as ended.
  */
-const checkIfBlockEnded = () => {
-    return timeTakeninBlock &lt; TIME_IN_BLOCK;
-};
+const checkIfBlockEnded = () => timeTakeninBlock &lt; TIME_IN_BLOCK;
 
 /**
- *
- * @param {int} point - Add point to the total points and updates the points.
+ * @param {Number} point - Add point to the total points and updates the points.
  */
 const addPoints = (point) => {
     points += point;
@@ -153,16 +117,6 @@ const updatePoints = () => {
 };
 
 /**
- * Checks if the current move has expired beyond the time.
- */
-const moveExpired = () => {
-    console.log("moveExpired");
-    if (!loading &amp;&amp; new Date().getTime() - time > TIME_FOR_MOVE) {
-        setStyle(false, null);
-    }
-};
-
-/**
  * Prepares for next move by hiding the arrows, and adds time taken in the previous move.
  */
 const prepareNextMove = () => {
@@ -172,20 +126,25 @@ const prepareNextMove = () => {
     timeTaken += time;
     if (timeTaken > TIME_IN_BLOCK) {
         // time for new block
+    } else {
+        timeout = setTimeout(() => {
+            moveExpired(loading);
+        }, TIME_FOR_MOVE);
     }
 };
 
 /**
  *
- * @param {string} hasWon - if this is lucky show the smiley else the frown image.
- * @param {string} key - which key the user pressed.
+ * @param {String} key - which key the user pressed.
+ * @param {Number} point - how much point the user gets.
  * This function shows the correct arrow after a correct move and loads the next move.
  */
-const setStyle = (hasWon, key) => {
-    console.log("setStyle", hasWon, key);
+const setStyle = (key, point) => {
+    console.log("setStyle", key, point);
     const arrow =
         key === "e" ? pattern1.arrow : key === "i" ? pattern2.arrow : null;
-    if (hasWon === "lucky") {
+
+    if (point === 1) {
         face.src = "./images/smiley.png";
     } else {
         face.src = "./images/frowny.jpg";
@@ -207,25 +166,102 @@ const setStyle = (hasWon, key) => {
 
     showLoadingScreen();
     prepareNextMove();
+    // addCurrentData();
     hideLoadingScreen();
 };
 
 document.addEventListener("keydown", (e) => {
     if (!loading &amp;&amp; (e.key === "e" || e.key === "i")) {
+        clearTimeout(timeout);
         const key = e.key;
         if (key === "e") {
             const point = choosePoint(pattern1.luck);
-            setStyle(pattern1.luck, key);
+            setStyle(key, point);
             addPoints(point);
         } else {
             const point = choosePoint(pattern2.luck);
-            setStyle(pattern2.luck, key);
+            setStyle(key, point);
             addPoints(point);
         }
     }
 });
 
-// setInterval(moveExpired, 200);
+// TODO
+
+// const raw_dataHeader = [
+//     "date",
+//     "time",
+//     "blocknum",
+//     "values.countBlocks",
+//     "values.index_correctChoice",
+//     "values.index_incorrectChoice",
+//     "values.correctChoicePosition",
+//     "values.maxCorrectChoices",
+//     "values.reversal",
+//     "values.relearned",
+//     "values.respCategory",
+//     "values.countConsecutiveCorrect",
+//     "values.feedback",
+//     "values.countICFeedback",
+//     "values.countReversals",
+//     "values.totalPoints",
+//     "values.iti",
+//     "presentedCorrectStim",
+//     "presentedIncorrectStim",
+//     "response",
+//     "correct",
+// ];
+
+// let raw_data = [];
+
+// const currentdate = new Date();
+// const currentDateTime =
+//     currentdate.getFullYear() +
+//     "-" +
+//     (currentdate.getMonth() + 1) +
+//     "-" +
+//     currentdate.getDate() +
+//     " " +
+//     currentdate.getHours() +
+//     ":" +
+//     currentdate.getMinutes() +
+//     ":" +
+//     currentdate.getSeconds();
+
+// // adding data for this block
+// function addCurrentData(current_res, correct_res) {
+//     let current_data = [];
+//     current_data.push(currentDateTime); // 'date'
+//     current_data.push(blocksCompleted); // 'values.countBlocks '
+//     current_data.push(correct_res.img); // 'values.index_correctChoice'
+//     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // 'values.index_incorrectChoice'
+//     current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
+//     current_data.push((i = current_res === correct_res ? ++i : 0)); // 'values.maxCorrectChoices'
+//     current_data.push(); // 'values.reversal'
+//     current_data.push(); // 'values.relearned'
+//     current_data.push(); // 'values.respCategory'
+//     current_data.push(); // 'values.countConsecutiveCorrect'
+//     current_data.push(); // 'values.feedback'
+//     current_data.push(); // 'values.countICFeedback'
+//     current_data.push(reversalss); // 'values.countReversals'
+//     current_data.push(document.getElementById("points".textContent));
+//     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img);
+//     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img);
+//     current_data.push(current_res === correct_res ? 1 : 0); //correct
+
+//     raw_data.push(current_data);
+// }
+
+// /**
+//  * Function for saving the data.
+//  */
+// const savingData = () => {
+//     const sql1 = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
+
+//     const query = `INSERT INTO ProjectNEWTable (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
+//     execSqlSync(sql1, raw_data);
+//     execSqlSync(query, raw_data);
+// };
 </code></pre>
         </article>
     </section>
@@ -240,7 +276,7 @@ document.addEventListener("keydown", (e) => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Nov 10 2021 16:00:37 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Nov 12 2021 16:32:52 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

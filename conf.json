@@ -1,6 +1,7 @@
 {
     "source": {
-        "include": ["constants.js", "functions.js", "game.js", "README.md"]
+        "include": ["README.md", "js"],
+        "includePattern": ".+\\.(js)$"
     },
     "opts": {
         "template": "node_modules/docdash",
@@ -8,5 +9,6 @@
         "destination": "./docs/",
         "recurse": true
     },
-    "plugins": ["plugins/markdown"]
+    "plugins": ["plugins/markdown"],
+    "recurseDepth": 10
 }
