@@ -1,4 +1,3 @@
-const { execFileSync } = require("child_process");
 const express = require("express");
 const path = require("path");
 const { execSqlSync } = require("./driver.js");
@@ -19,7 +18,7 @@ app.use("/js", express.static(path.join(__dirname, "js")));
 
 app.post("/addtoDB", (req, res) => {
     // add to DB
-    // execFileSync()
+    // execSqlSync()
 });
 
 app.listen(5000);
