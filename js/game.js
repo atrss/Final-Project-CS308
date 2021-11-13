@@ -162,7 +162,7 @@ document.addEventListener("keydown", (e) => {
 let raw_data = [];
 
 // adding data for this block
-function addCurrentData(current_res, reversal, respCategory, point) {
+function addCurrentData(current_res, key, reversal, respCategory, point) {
     const correct_res = pattern1.luck === "lucky" ? pattern1 : pattern2;
 
     let current_data = [];
@@ -178,9 +178,9 @@ function addCurrentData(current_res, reversal, respCategory, point) {
     current_data.push(); // 'values.countConsecutiveCorrect'
     current_data.push(point === -1 ? 1 : 2); // 'values.feedback'
     current_data.push(); // 'values.countICFeedback'
-    current_data.push(reversal); // 'values.countReversals'
+    current_data.push(reversalCount); // 'values.countReversals'
     current_data.push(totalPointsAcrossBlocks); // totalPoints
-    // TODO response
+    current_data.push(key.charCodeAt(0)); // response
     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
     current_data.push(current_res === correct_res ? 1 : 0); //correct
@@ -197,6 +197,7 @@ const savingData = () => {
     const sql1 = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
 
     const query = `INSERT INTO ProjectNEWTable (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
-    execSqlSync(sql1); // TODO: name of table
-    execSqlSync(query, [raw_data]);
+    // use API
+    //execSqlSync(sql1); // TODO: name of table
+    //execSqlSync(query, [raw_data]); // [raw_data] to insert multiple rows
 };
