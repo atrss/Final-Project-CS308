@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,15 +8,19 @@
     <link rel="stylesheet" href="TOL_style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <title>Tower of London Task</title>
 </head>
+
 <body>
     <div id="main" class="instruct">
         <div class="nine">
             <h1>Tower of London<span>Group 6-CS308</span></h1>
-          </div>
+        </div>
         <!-- <h1></h1>
         <p class="p-2 m-2"></p>
         <hr> -->
@@ -25,30 +30,45 @@
                 <strong>Instructions</strong>
             </h1>
             <p class="p-2 m-2 text-left">
-                <ul>
-              <li>  During this task, two boards will be presented at a time. The boards will be of colored balls arranged on three pegs.</li>
-              <li>   Imagine that these balls have holes through them and the pegs are going through the holes. Notice that the first peg can hold three balls, the second peg can hold two balls, and the third peg can hold one ball.</li>
-              <li>Your task will be to make the arrangements of balls in your board look like the arrangements of balls in the goal board in the fewest possible moves. You will have <strong>3 attempts</strong> to solve each problem.
-              </li>
-              <li> The balls in the goal board are fixed in place, but the balls in your board are movable. You have to move them to make your board look like the target board. Sometime you will have to move a ball to a different peg in order to get to the ball below it. 
-              </li>
-              <li>During this task it is important that you remember, you want the <strong>fewest possible moves</strong> that are required to make your board look like the goal board.During the test you will move the balls on your board by clicking on the pegs. 
-              </li>
-          <li>    When you click on a peg, the top ball will move into a box called 'Current Ball'. When you click on another peg, the ball in 'Current Ball' will move to the top of that peg.If you try to select a peg with no balls or try to place a ball on a full peg, nothing will happen. 
-          </li>
-          <li>If you successfully make your board look like the target board, the trial will end and you will move to the next problem.We will start with an easy example so that you can learn the controls.</li>
-          <li>If you feel you cannot move to the solution from your exisiting configuration, you can finish the current attempt and revert back to the original configuration by clicking the <strong> Reset</strong> button</li>
+            <ul>
+                <li> During this task, two boards will be presented at a time. The boards will be of colored balls
+                    arranged on three pegs.</li>
+                <li> Imagine that these balls have holes through them and the pegs are going through the holes. Notice
+                    that the first peg can hold three balls, the second peg can hold two balls, and the third peg can
+                    hold one ball.</li>
+                <li>Your task will be to make the arrangements of balls in your board look like the arrangements of
+                    balls in the goal board in the fewest possible moves. You will have <strong>3 attempts</strong> to
+                    solve each problem.
+                </li>
+                <li> The balls in the goal board are fixed in place, but the balls in your board are movable. You have
+                    to move them to make your board look like the target board. Sometime you will have to move a ball to
+                    a different peg in order to get to the ball below it.
+                </li>
+                <li>During this task it is important that you remember, you want the <strong>fewest possible
+                        moves</strong> that are required to make your board look like the goal board.During the test you
+                    will move the balls on your board by clicking on the pegs.
+                </li>
+                <li> When you click on a peg, the top ball will move into a box called 'Current Ball'. When you click on
+                    another peg, the ball in 'Current Ball' will move to the top of that peg.If you try to select a peg
+                    with no balls or try to place a ball on a full peg, nothing will happen.
+                </li>
+                <li>If you successfully make your board look like the target board, the trial will end and you will move
+                    to the next problem.We will start with an easy example so that you can learn the controls.</li>
+                <li>If you feel you cannot move to the solution from your exisiting configuration, you can finish the
+                    current attempt and revert back to the original configuration by clicking the <strong>
+                        Reset</strong> button</li>
 
-                </ul>
-                </p>
+            </ul>
+            </p>
         </div>
-        
-        
-        
+
+
+
         <button type="button" class="button-two" onclick="next()">Start</button>
-    
+
     </div>
 
 </body>
-<script type="text/javascript" src="task.js" ></script>
+<script type="text/javascript" src="task.js"></script>
+
 </html>

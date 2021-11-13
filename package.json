@@ -1,0 +1,19 @@
+{
+  "name": "final",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atrss/Final-Project-CS308.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atrss/Final-Project-CS308/issues"
+  },
+  "homepage": "https://github.com/atrss/Final-Project-CS308#readme"
+}
