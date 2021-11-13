@@ -2,23 +2,23 @@ const express = require("express");
 const path = require("path");
 const { execSqlSync } = require("./driver.js");
 
-const app = express();
+const router = express.Router({ mergeParams: true });
 const views = path.join(__dirname, "views");
 
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
     res.sendFile(path.join(views, "intro1.html"));
 });
 
-app.get("/game", (req, res) => {
+router.get("/game", (req, res) => {
     res.sendFile(path.join(views, "game.html"));
 });
 
-app.use("/images", express.static(path.join(__dirname, "images")));
-app.use("/js", express.static(path.join(__dirname, "js")));
+router.use("/images", express.static(path.join(__dirname, "images")));
+router.use("/js", express.static(path.join(__dirname, "js")));
 
-app.post("/addtoDB", (req, res) => {
+router.post("/addtoDB", (req, res) => {
     // add to DB
     // execFileSync()
 });
 
-module.exports = { app };
+module.exports = { router };
