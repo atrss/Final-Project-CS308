@@ -7,6 +7,7 @@ import {
     choosePoint,
     startGame,
     moveExpired,
+    currentDateTime,
 } from "./functions.js";
 
 import { Pattern } from "./pattern.js";
@@ -25,8 +26,10 @@ const pattern1 = new Pattern(
     face = document.getElementById("face");
 
 let loading = false,
+    rev = chooseReversal(),
     blocksCompleted = 0,
     timeTakeninBlock = 0,
+    consecutive = 0,
     time = new Date().getTime(),
     points = 0,
     timeTaken = 0,
@@ -82,6 +85,15 @@ const prepareNextMove = () => {
     timeTaken += time;
     if (timeTaken > TIME_IN_BLOCK) {
         // time for new block
+        [pattern1, pattern2] = startGame();
+        points = 0;
+        blocksCompleted++;
+        if (blocksCompleted == 3) {
+            // end the game
+        } else {
+            // add block
+            //
+        }
     } else {
         timeout = setTimeout(() => {
             moveExpired(loading);
@@ -169,20 +181,6 @@ document.addEventListener("keydown", (e) => {
 // ];
 
 // let raw_data = [];
-
-// const currentdate = new Date();
-// const currentDateTime =
-//     currentdate.getFullYear() +
-//     "-" +
-//     (currentdate.getMonth() + 1) +
-//     "-" +
-//     currentdate.getDate() +
-//     " " +
-//     currentdate.getHours() +
-//     ":" +
-//     currentdate.getMinutes() +
-//     ":" +
-//     currentdate.getSeconds();
 
 // // adding data for this block
 // function addCurrentData(current_res, correct_res) {

@@ -67,3 +67,20 @@ export const startGame = (pattern1, pattern2) => {
     [pattern1.luck, pattern2.luck] = chooseImage();
     return [pattern1, pattern2];
 };
+
+export const currentDateTime = () => {
+    const currentdate = new Date();
+    return (
+        currentdate.getFullYear() +
+        "-" +
+        (currentdate.getMonth() + 1) +
+        "-" +
+        currentdate.getDate() +
+        " " +
+        currentdate.getHours() +
+        ":" +
+        currentdate.getMinutes() +
+        ":" +
+        currentdate.getSeconds()
+    );
+};
