@@ -1,0 +1,341 @@
+
+html, body {
+  margin: 0; height: 100%; overflow: hidden;
+  background-color: #000000 !important;
+} 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #3d3d3d; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(228, 214, 86); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(179, 168, 74); 
+}
+
+.scroll {
+  margin:4px, 4px;
+  padding:4px;
+  background-color: rgb(0, 0, 0);
+  width: 500px;
+  height: 70%;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align:justify;
+}
+
+.centerv{
+  top: 25%;
+  position:relative;
+}
+
+.htp{
+  width: 75%;
+  color: #e6e6e6;
+  border: 4px solid rgb(241, 241, 241);
+  padding: 50px;
+  margin: auto;
+  position:relative;
+  margin-bottom: 30px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  text-align: left;
+}
+
+.score_canva{
+  font-family:'Press Start 2P', cursive; 
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing:1px;
+  color: rgb(238, 238, 238);
+  padding: 20px;
+  margin-left: 3%;
+  margin-top: 5%;
+  position:relative;
+  border-width: 2px;
+  margin-bottom: 30px;  
+  text-align: left;
+
+}
+
+.nine h1 {
+  text-align:center; 
+  font-size:50px; 
+  text-transform:uppercase; 
+  color:rgb(221, 47, 47); 
+  letter-spacing:1px;
+  font-family:'Press Start 2P', cursive; 
+  font-weight:400;
+}
+.nine h1 span {
+  margin-top: 5px;
+  font-size:15px; color:rgb(245, 228, 77); word-spacing:1px; font-weight:normal; letter-spacing:2px;
+  text-transform: uppercase; font-family:"Raleway", sans-serif; font-weight:500;
+
+  display: grid;
+  grid-template-columns: 1fr max-content 1fr;
+  grid-template-rows: 27px 0;
+  grid-gap: 20px;
+  align-items: center;
+}
+
+.nine h1 span:after,.nine h1 span:before {
+  content: " ";
+  display: block;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  height: 3px;
+  background-color:#f8f8f8;
+}
+
+.button-two {
+  color: rgb(0, 0, 0);
+  font-family:'Press Start 2P', cursive; 
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing:1px;
+  background-color:#eeeeee;
+  border: none;
+  padding: 10px;
+  width: 150px;
+  transition: 0.1s;
+}
+
+.button-two:hover {
+  text-transform: uppercase;
+  background-color:rgb(221, 47, 47);
+}
+
+.tol_canvas {
+  width: 0vw;
+  height: 80vh;
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-right:-50%;
+  transform: translate(-50%,-50%);
+}
+.instruct{
+  margin:auto;
+  top: 10px;
+  height: 90%;
+  width: 80%;
+  background-color: rgb(0, 0, 0);
+  text-align: center;
+  position: relative;
+  border: 10px solid #219bd3;
+  border-color: #219bd3;
+  padding: 50px;
+  margin-top:3rem;
+}
+.text2{
+  width: 70%;
+  padding: 50px;
+  margin: auto;
+  position:relative;
+  margin-bottom: 30px;  
+  font-family:'Press Start 2P', cursive; 
+  font-weight: 400;
+  font-size: x-large;
+  text-transform: uppercase;
+  letter-spacing:1px;
+  color: rgb(238, 238, 238);
+}
+.tol_goal_board {
+  width: 30vw;
+  height: 24vw;
+  position:absolute;
+  top:58%;
+  left:48%;
+  transform: translate(-110%, -60%);
+}
+
+.tol_your_board {
+  width: 30vw;
+  height: 24vw;
+  position:absolute;
+  top:58%;
+  left:53%;
+  transform: translate(10%,-60%);
+}
+
+.tol_base {
+  width: 100%;
+  height: 0.3rem;
+  background-color: rgb(240, 211, 51);
+  position:absolute;
+  top:102%;
+}
+
+.tol_board_label {
+  height: 2vw;
+  position:relative;
+  top: 107%;
+  left: 50%;
+  transform: translate(-50%,0%);
+  text-align:center; 
+  font-family:'Press Start 2P', cursive; 
+  font-weight: 400;
+  font-size: medium;
+  text-transform: uppercase;
+  letter-spacing:1px;
+color: rgb(238, 238, 238);
+}
+
+#tol_peg_1 {
+  width:20%;
+  height: 75%;
+  position:absolute;
+  top:28%;
+  left:7%;
+  color: #eeeeee;
+  transform: rotate(180deg);
+  -moz-transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  -o-transform:rotate(180deg);
+  -ms-transform:rotate(180deg);
+}
+
+#tol_peg_2 {
+  width:20%;
+  height: 50%;
+  position:absolute;
+  top:53%;
+  left:40%;
+  transform: rotate(180deg);
+  -moz-transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  -o-transform:rotate(180deg);
+  -ms-transform:rotate(180deg);
+}
+
+#tol_peg_3 {
+  width:20%;
+  height: 27%;
+  position:absolute;
+  top:76%;
+  left:73%;
+  transform: rotate(180deg);
+  -moz-transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  -o-transform:rotate(180deg);
+  -ms-transform:rotate(180deg);
+}
+
+.tol_ball {
+  width: 5.5vw;
+  height: 5.5vw;
+  background: red;
+  -moz-border-radius: 2.75vw;
+  -webkit-border-radius: 2.75vw;
+  border-radius: 2.75vw;
+  position: relative;
+}
+
+.tol_ball_peg {
+  width: 5.5vw;
+  height: 5.5vw;
+  background: red;
+  -moz-border-radius: 2.5vw;
+  -webkit-border-radius: 2.5vw;
+  border-radius: 2.5vw;
+  position: relative;
+}
+
+.tol_hand_ball {
+  width: 6vw;
+  height: 6vw;
+  background: red;
+  -moz-border-radius: 3vw;
+  -webkit-border-radius: 3vw;
+  border-radius: 3vw;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+}
+
+.tol_ball_label {
+  text-align:center;
+  font-size: 3.3rem;
+  position: relative;
+  top: 22%;
+  font-weight: 700;
+  color: #ffffff;
+  transform: rotate(180deg);
+  -moz-transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  -o-transform:rotate(180deg);
+  -ms-transform:rotate(180deg);
+}
+
+.tol_peg {
+  width: 10%;
+  height: 100%;
+  background-color: rgb(233, 213, 33);
+  margin-left: 37%;
+  margin-right: 37%;
+  position: relative;
+  vertical-align: bottom;
+}
+.tol_vertical_line{
+  position: absolute;
+  z-index: -1;
+  top: -30px;
+  bottom: -30px;
+  left: 50%;
+  border-left: 10px dashed rgb(221,47,47);
+}
+.tol_Red {
+  background:  rgb(212, 48, 48);
+}
+
+.tol_Green {
+  background: rgb(26, 168, 37);
+}
+
+.tol_Blue {
+  background: rgb(24, 105, 180);
+}
+
+.tol_hand_box {
+  width: 12vw;
+  height: 12vw;
+  position:absolute;
+  top:12%;
+  left:74%;
+  background-color: rgb(223, 223, 223);
+  border: 3px solid rgb(221, 47, 47);
+  transform: rotate(180deg);
+  -moz-transform: rotate(80deg);
+  -webkit-transform:rotate(180deg);
+  -o-transform:rotate(180deg);
+  -ms-transform:rotate(180deg);
+}
+
+.reset {
+  margin-top: 38%;
+  margin-left: 57%;
+}
+
+.tol_hand_label {
+  font-family:'Press Start 2P', cursive; 
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing:1px;
+  color: rgb(235, 235, 235);
+  position:absolute;
+  top:8%;
+  left:74%;
+}
+
