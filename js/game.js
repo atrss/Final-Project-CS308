@@ -5,8 +5,8 @@
 import {
     chooseReversal,
     choosePoint,
-    startGame,
-    moveExpired,
+    newPattern,
+    chooseImage,
     currentDateTime,
 } from "./functions.js";
 
@@ -25,6 +25,16 @@ let pattern1 = new Pattern(
     ),
     face = document.getElementById("face");
 
+/**
+ * Checks if the current move has expired beyond the time.
+ */
+const moveExpired = (loading) => {
+    console.log("moveExpired!!!");
+    if (!loading) {
+        setStyle(null, null);
+    }
+};
+
 let loading = false,
     rev = chooseReversal(),
     blocksCompleted = 0,
@@ -35,7 +45,12 @@ let loading = false,
     timeTaken = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
-[pattern1, pattern2] = startGame(pattern1, pattern2);
+const startGame = () => {
+    [pattern1.img, pattern2.img] = newPattern();
+    [pattern1.luck, pattern2.luck] = chooseImage();
+};
+
+startGame();
 
 /**
  * Shows the loading screen.
@@ -78,7 +93,7 @@ const updatePoints = () => {
 /**
  * Updates block on the DOM.
  */
- const updateBlockNumber = () => {
+const updateBlockNumber = () => {
     document.getElementById("blockNumber").textContent = blocksCompleted;
 };
 
@@ -88,22 +103,22 @@ const updatePoints = () => {
 const prepareNextMove = () => {
     pattern1.arrow.visibility = "hidden";
     pattern2.arrow.visibility = "hidden";
-    time = new Date().getTime();
-    timeTaken += time;
-    timeTakeninBlock += time;
+    const currentTime = new Date().getTime();
+    timeTakeninBlock += currentTime - time;
+    timeTaken += currentTime - time;
+    time = currentTime;
     if (timeTakeninBlock > TIME_IN_BLOCK) {
-        // time for new block
-        [pattern1, pattern2] = startGame();
+        console.log("time for new block", timeTakeninBlock);
+        startGame();
         points = 0;
         blocksCompleted++;
         if (blocksCompleted == 3) {
             // end the game
         } else {
             // add block
-            //display new game 
-            updateBlockNumber()
+            //display new game
+            updateBlockNumber();
             timeTakeninBlock = 0;
-
         }
     } else {
         timeout = setTimeout(() => {
