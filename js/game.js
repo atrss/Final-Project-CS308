@@ -2,18 +2,19 @@
  * @module
  */
 
-import {
+ import {
     chooseReversal,
     choosePoint,
     newPattern,
     chooseImage,
     currentDateTime,
+    respCategory,
 } from "./functions.js";
 
 import { Pattern } from "./pattern.js";
 import { TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
 
-let pattern1 = new Pattern(
+const pattern1 = new Pattern(
         document.getElementById("img1"),
         null,
         document.getElementById("arrow1")
@@ -24,7 +25,7 @@ let pattern1 = new Pattern(
         document.getElementById("arrow2")
     ),
     face = document.getElementById("face"),
-    startTime = currentDateTime();
+    startTime = currentDateTime(),;
 
 /**
  * Checks if the current move has expired beyond the time.
@@ -32,18 +33,22 @@ let pattern1 = new Pattern(
 const moveExpired = (loading) => {
     console.log("moveExpired!!!");
     if (!loading) {
-        setStyle(null, null);
+        setStyle(0, 0);
     }
 };
 
 let loading = false,
     rev,
+    hasReversed = false,
+    maxCorrectChoices = 0,
     blocksCompleted = 0,
     timeTakeninBlock = 0,
     consecutive = 0,
     time = new Date().getTime(),
     points = 0,
     timeTaken = 0,
+    reversals = 0,
+    countICFeedback = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
 const startGame = () => {
@@ -112,7 +117,8 @@ const prepareNextMove = () => {
         points = 0;
         updateBlockNumber();
         timeTakeninBlock = 0;
-
+        reverals = 0,
+        consecutive = 0,
         blocksCompleted++;
         totalPointsAcrossBlocks += points;
         if (blocksCompleted == 3) {
@@ -144,11 +150,22 @@ const setStyle = (key, point) => {
         consecutive++;
     } else {
         face.src = "./images/frowny.jpg";
+        maxCorrectChoices = Math.max([maxCorrectChoices, consecutive]);
         consecutive = 0;
     }
 
+    if (hasReversed) {
+        // next move after reversal
+        hasReversed = false;
+    }
+
     if (consecutive == rev) {
-        // reversal ka code daalna he
+        [pattern1.luck, pattern2.luck] = [pattern2.luck, pattern1.luck];
+        rev = chooseReversal();
+        hasReversed = true;
+        maxCorrectChoices = 0;
+        reversals++;
+        countICFeedback = 0;
     }
 
     if (arrow !== null && arrow.style.visibility == "hidden") {
@@ -187,28 +204,28 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// TODO
 
 let raw_data = [];
 
 // adding data for this block
-function addCurrentData(current_res, key, reversal, respCategory, point) {
+const addCurrentData = (current_res, point, key) => {
     const correct_res = pattern1.luck === "lucky" ? pattern1 : pattern2;
-
+    countICFeedback += (point === -1 && current_res.luck === "unlucky" ? 1 : 0);
+    
     let current_data = [];
     current_data.push(startTime); // 'date'
     current_data.push(blocksCompleted); // 'values.countBlocks '
     current_data.push(correct_res.img); // 'values.index_correctChoice'
     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // 'values.index_incorrectChoice'
     current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
-    //TODO current_data.push((i = current_res === correct_res ? ++i : 0)); // 'values.maxCorrectChoices'
-    current_data.push(reversal); // 'values.reversal'
-    current_data.push(); // 'values.relearned'
-    current_data.push(); // 'values.respCategory'
-    current_data.push(); // 'values.countConsecutiveCorrect'
+    current_data.push(maxCorrectChoices); // 'values.maxCorrectChoices'
+    current_data.push(Number(hasReversed)); // 'values.reversal'
+    current_data.push(relearned(hasReversed, point, reversals)); // 'values.relearned'
+    current_data.push(respCategory(current_res, point, correct_res, hasReversed)); // 'values.respCategory'
+    current_data.push(consecutive); // 'values.countConsecutiveCorrect'
     current_data.push(point === -1 ? 1 : 2); // 'values.feedback'
-    current_data.push(); // 'values.countICFeedback'
-    current_data.push(reversalCount); // 'values.countReversals'
+    current_data.push(countICFeedback); // 'values.countICFeedback' 
+    current_data.push(reversals); // 'values.countReversals'
     current_data.push(totalPointsAcrossBlocks); // totalPoints
     current_data.push(key.charCodeAt(0)); // response
     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
@@ -218,15 +235,17 @@ function addCurrentData(current_res, key, reversal, respCategory, point) {
     raw_data.push(current_data);
 }
 
+
 /**
  * Function for saving the data.
  */
 const savingData = () => {
-    // whats i ?
-    // add sql for summary wala also
-    const sql1 = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
+    // whats i = the number of participants' data file
+    
+    const create_table = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
 
     const query = `INSERT INTO ProjectNEWTable (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
+    
     // use API
     //execSqlSync(sql1); // TODO: name of table
     //execSqlSync(query, [raw_data]); // [raw_data] to insert multiple rows
