@@ -322,7 +322,7 @@ var getPractice = function() {
       var button = '<div><input type= "button" class="button-two" onclick = "onsuccess()" value="Next"></input></div>'
     }
     else{
-      var button = '<div><input type= "button" class="button-two" onclick = "onsuccess()" value="End Practice"></input></div>'
+      var button = '<div><input type= "button" class="button-one" onclick = "onsuccess()" value="End Practice"></input></div>'
     }
     return canvas + referenceBoard + goal + feedback + button
   }

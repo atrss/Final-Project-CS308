@@ -118,6 +118,26 @@ html, body {
   background-color:rgb(221, 47, 47);
 }
 
+.button-one {
+  color: rgb(0, 0, 0);
+  font-family:'Press Start 2P', cursive; 
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing:1px;
+  background-color:#eeeeee;
+  border: none;
+  padding: 10px;
+  margin-left: 2%;
+  margin-right: 2%;
+  width: 210px;
+  transition: 0.1s;
+}
+
+.button-one:hover {
+  text-transform: uppercase;
+  background-color:rgb(221, 47, 47);
+}
+
 .tol_canvas {
   width: 0vw;
   height: 80vh;
