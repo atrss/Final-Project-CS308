@@ -5,15 +5,15 @@
 import {
     chooseReversal,
     choosePoint,
-    startGame,
-    moveExpired,
+    newPattern,
+    chooseImage,
     currentDateTime,
 } from "./functions.js";
 
 import { Pattern } from "./pattern.js";
 import { TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
 
-const pattern1 = new Pattern(
+let pattern1 = new Pattern(
         document.getElementById("img1"),
         null,
         document.getElementById("arrow1")
@@ -26,6 +26,16 @@ const pattern1 = new Pattern(
     face = document.getElementById("face"),
     startTime = currentDateTime();
 
+/**
+ * Checks if the current move has expired beyond the time.
+ */
+const moveExpired = (loading) => {
+    console.log("moveExpired!!!");
+    if (!loading) {
+        setStyle(null, null);
+    }
+};
+
 let loading = false,
     totalPointsAcrossBlocks = 0,
     rev = chooseReversal(),
@@ -37,7 +47,12 @@ let loading = false,
     timeTaken = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
-[pattern1, pattern2] = startGame();
+const startGame = () => {
+    [pattern1.img, pattern2.img] = newPattern();
+    [pattern1.luck, pattern2.luck] = chooseImage();
+};
+
+startGame();
 
 /**
  * Shows the loading screen.
@@ -78,16 +93,25 @@ const updatePoints = () => {
 };
 
 /**
+ * Updates block on the DOM.
+ */
+const updateBlockNumber = () => {
+    document.getElementById("blockNumber").textContent = blocksCompleted;
+};
+
+/**
  * Prepares for next move by hiding the arrows, and adds time taken in the previous move.
  */
 const prepareNextMove = () => {
     pattern1.arrow.visibility = "hidden";
     pattern2.arrow.visibility = "hidden";
-    time = new Date().getTime();
-    timeTaken += time;
-    if (!checkIfBlockEnded()) {
-        // time for new block
-        [pattern1, pattern2] = startGame();
+    const currentTime = new Date().getTime();
+    timeTakeninBlock += currentTime - time;
+    timeTaken += currentTime - time;
+    time = currentTime;
+    if (timeTakeninBlock > TIME_IN_BLOCK) {
+        console.log("time for new block", timeTakeninBlock);
+        startGame();
         points = 0;
         blocksCompleted++;
         totalPointsAcrossBlocks += points;
@@ -95,7 +119,9 @@ const prepareNextMove = () => {
             // end the game
         } else {
             // add block
-            //
+            //display new game
+            updateBlockNumber();
+            timeTakeninBlock = 0;
         }
     } else {
         timeout = setTimeout(() => {
