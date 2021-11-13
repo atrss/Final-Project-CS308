@@ -27,6 +27,7 @@ const pattern1 = new Pattern(
     startTime = currentDateTime();
 
 let loading = false,
+    totalPointsAcrossBlocks = 0,
     rev = chooseReversal(),
     blocksCompleted = 0,
     timeTakeninBlock = 0,
@@ -89,6 +90,7 @@ const prepareNextMove = () => {
         [pattern1, pattern2] = startGame();
         points = 0;
         blocksCompleted++;
+        totalPointsAcrossBlocks += points;
         if (blocksCompleted == 3) {
             // end the game
         } else {
@@ -160,7 +162,7 @@ document.addEventListener("keydown", (e) => {
 let raw_data = [];
 
 // adding data for this block
-function addCurrentData(current_res, reversal, respCategory) {
+function addCurrentData(current_res, reversal, respCategory, point) {
     const correct_res = pattern1.luck === "lucky" ? pattern1 : pattern2;
 
     let current_data = [];
@@ -174,10 +176,10 @@ function addCurrentData(current_res, reversal, respCategory) {
     current_data.push(); // 'values.relearned'
     current_data.push(); // 'values.respCategory'
     current_data.push(); // 'values.countConsecutiveCorrect'
-    current_data.push(); // 'values.feedback'
+    current_data.push(point === -1 ? 1 : 2); // 'values.feedback'
     current_data.push(); // 'values.countICFeedback'
-    current_data.push(reversalss); // 'values.countReversals'
-    current_data.push(document.getElementById("points").textContent); // ??
+    current_data.push(reversal); // 'values.countReversals'
+    current_data.push(totalPointsAcrossBlocks); // totalPoints
     // TODO response
     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
