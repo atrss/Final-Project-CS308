@@ -13,7 +13,7 @@ import {
 import { Pattern } from "./pattern.js";
 import { TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
 
-const pattern1 = new Pattern(
+let pattern1 = new Pattern(
         document.getElementById("img1"),
         null,
         document.getElementById("arrow1")
@@ -35,7 +35,7 @@ let loading = false,
     timeTaken = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
-[pattern1, pattern2] = startGame();
+[pattern1, pattern2] = startGame(pattern1, pattern2);
 
 /**
  * Shows the loading screen.
@@ -76,6 +76,13 @@ const updatePoints = () => {
 };
 
 /**
+ * Updates block on the DOM.
+ */
+ const updateBlockNumber = () => {
+    document.getElementById("blockNumber").textContent = blocksCompleted;
+};
+
+/**
  * Prepares for next move by hiding the arrows, and adds time taken in the previous move.
  */
 const prepareNextMove = () => {
@@ -83,7 +90,8 @@ const prepareNextMove = () => {
     pattern2.arrow.visibility = "hidden";
     time = new Date().getTime();
     timeTaken += time;
-    if (timeTaken > TIME_IN_BLOCK) {
+    timeTakeninBlock += time;
+    if (timeTakeninBlock > TIME_IN_BLOCK) {
         // time for new block
         [pattern1, pattern2] = startGame();
         points = 0;
@@ -92,7 +100,10 @@ const prepareNextMove = () => {
             // end the game
         } else {
             // add block
-            //
+            //display new game 
+            updateBlockNumber()
+            timeTakeninBlock = 0;
+
         }
     } else {
         timeout = setTimeout(() => {
