@@ -1,17 +1,12 @@
 const express = require("express");
 const path = require("path");
-app = express();
+const app = express();
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(views, "index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/task.js", (req, res) => {
-    res.sendFile(path.join(views, "task.js"));
-});
-
-app.get("/TOL_style.css", (req, res) => {
-    res.sendFile(path.join(views, "TOL_style.css"));
-});
+app.use("/style", express.static(path.join(__dirname, "style")));
+app.use("/js", express.static(path.join(__dirname, "js")));
 
 module.exports = { app };
