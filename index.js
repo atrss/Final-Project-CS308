@@ -9,5 +9,4 @@ app.get("/", (req, res) => {
 
 app.use("/prob", require("./prob/app").router);
 app.use("/tol", require("./tol/app").router);
-
 app.listen(8080);
