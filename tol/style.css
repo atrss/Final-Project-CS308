@@ -1,7 +1,7 @@
 
  html, body {
   height: 100%;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   background-color: #2a2a72;
 background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
 } 
@@ -9,7 +9,7 @@ background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
 .scroll {
   margin:4px, 4px;
   padding:4px;
-  
+  background-color: rgb(168, 219, 253);
   width: 500px;
   height: 70%;
   position: relative;
@@ -18,9 +18,8 @@ background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
   text-align:justify;
 }
 .centerv{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 25%;
+  position:relative;
 }
 .htp{
   width: 75%;
@@ -164,35 +163,15 @@ a:hover{
   font-weight: 600;
   background-color:#0b68b4;
   border: none;
-  padding: 20px;
-  width: 200px;
-  transition: all 0.5s;
-}
-
-
-.button-two span {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
+  padding: 10px;
+  width: 250px;
   transition: 0.5s;
 }
 
-.button-two span:after {
-  content: '»';
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.5s;
-}
-
-.button-two:hover span {
+.button-two:hover {
   padding-right: 25px;
-}
-
-.button-two:hover span:after {
-  opacity: 1;
-  right: 0;
+  background-color:#6fa2cc;
+  border-color: #0b68b4;
 }
 
 
@@ -242,7 +221,7 @@ a:hover{
     position:relative;
     margin-bottom: 30px;  
       font-weight: 650;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       font-size: larger;
     }
   .tol_goal_board {
@@ -277,10 +256,11 @@ a:hover{
     width: 50%;
     height: 2vw;
     position:relative;
+    font-family: 'Montserrat', sans-serif;
     top: 105%;
     left: 50%;
     transform: translate(-50%,0%);
-    font-size: 1.4rem;
+    font-size: 1.9rem;
     color: black;
     text-align:center; 
     font-weight: 550; 
@@ -315,9 +295,9 @@ a:hover{
   
   #tol_peg_3 {
     width:20%;
-    height: 30%;
+    height: 27%;
     position:absolute;
-    top:73%;
+    top:76%;
     left:73%;
     /* margin-right:-50%; */
     -moz-transform:rotate(180deg);
@@ -361,9 +341,9 @@ a:hover{
   
   .tol_ball_label {
     text-align:center;
-    font-size: 1.9rem;
+    font-size: 2.8rem;
     position: relative;
-    top: 20%;
+    top: 22%;
     color: #ffffff;
     text-shadow: -1px 1px 0 #000,
                  1px 1px 0 #000,
@@ -394,7 +374,7 @@ a:hover{
   .tol_peg {
     width: 10%;
     height: 100%;
-    background-color: black;
+    background-color: rgb(245, 245, 245);
     margin-left: 37%;
     margin-right: 37%;
     position: relative;
@@ -434,15 +414,19 @@ a:hover{
     -ms-transform:rotate(180deg);
 
   }
-  
+
+  .reset {
+    margin-top: 38%;
+    margin-left: 50%;
+  }
+
   .tol_hand_label {
-    width: 15vw;
-    height: 10vw;
     position:absolute;
     top:10%;
     left:76%;
-    margin-right:-50%;
+    font-family: 'Montserrat', sans-serif;
     font-size: 20px;
+
   }
   
   .tol_topbox {
