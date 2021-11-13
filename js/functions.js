@@ -67,37 +67,48 @@ export const currentDateTime = () => {
     );
 };
 
-export const respCategory = (current_res, point, correct_res, hasReversed) => {
+export const respCategory = (
+    current_res,
+    point,
+    correct_res,
+    hasReversed,
+    reversals
+) => {
     if (point === 0) {
         return "NR";
-    }
-    else if(point === 1 && current_res === correct_res && hasReversed){ // C-RE = first correct after reversal error or 'lucky guess' (selected correct outcome and received 'happy' feedback)
+    } else if (point === 1 && current_res === correct_res && hasReversed) {
+        // C-RE = first correct after reversal error or 'lucky guess' (selected correct outcome and received 'happy' feedback)
         return "C-RE";
-    }
-    else if (current_res === correct_res && point === 1) { // C = correct (selected correct/winning pattern and received 'happy' feedback)
+    } else if (current_res === correct_res && point === 1) {
+        // C = correct (selected correct/winning pattern and received 'happy' feedback)
         return "C";
-    }
-    else if(current_res===correct_res &&  point === -1 && hasReversed) { // C-RE (PE) = first correct after reversal errors (selected correct/winning pattern BUT received 'unhappy' feedback)
+    } else if (current_res === correct_res && point === -1 && hasReversed) {
+        // C-RE (PE) = first correct after reversal errors (selected correct/winning pattern BUT received 'unhappy' feedback)
         return "C-RE (PE)";
-    }
-    else if (current_res === correct_res && point === -1) { // PE = correct (selected correct/winning patterbBUT received 'unhappy' feedback)
+    } else if (current_res === correct_res && point === -1) {
+        // PE = correct (selected correct/winning patterbBUT received 'unhappy' feedback)
         return "PE";
-    }
-    else if(relearned(hasReversed, point, reversals)){
+    } else if (relearned(hasReversed, point, reversals)) {
         return "RE";
-    }
-    else if(point === 1 && correct_res !== current_res){
+    } else if (point === 1 && correct_res !== current_res) {
         return "E (PE)";
-    }
-    else if(point === -1 && correct_res !== current_res){
+    } else if (point === -1 && correct_res !== current_res) {
         return "E";
     }
 };
 
 export const relearned = (hasReversed, point, reversals) => {
-// 1 = participant has likely learned the reversed probability assignment
-// => the first selection of the new lucky pattern after a reversal
-// (lucky guesses excluded)
-// 0 = participant has likey not learned the reversed probability assignment
-    return ((!hasReversed && point === 1 && reversals > 0) ? 1 : 0);
+    // 1 = participant has likely learned the reversed probability assignment
+    // => the first selection of the new lucky pattern after a reversal
+    // (lucky guesses excluded)
+    // 0 = participant has likey not learned the reversed probability assignment
+    return !hasReversed && point === 1 && reversals > 0 ? 1 : 0;
+};
+
+export const randomNumber = () => {
+    let n = "";
+    for (let i = 0; i < 5; i++) {
+        n += String(Math.floor(Math.random() * 9));
+    }
+    return n;
 };

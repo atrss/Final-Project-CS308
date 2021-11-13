@@ -21,9 +21,9 @@ export const /** @constant
     @type {Number}
     @default
 */
-    TIME_IN_BLOCK = 9 * MIN * MILLI,
+    TIME_IN_BLOCK = 5 * MILLI,
     /** @constant
     @type {Number}
     @default
 */
-    TIME_FOR_MOVE = 10 * MILLI; // milliseconds
+    TIME_FOR_MOVE = 1 * MILLI; // 10sec

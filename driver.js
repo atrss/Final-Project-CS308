@@ -2,14 +2,20 @@ const mysql = require("mysql");
 const con = mysql.createPool({
     connectionLimit: 100,
     host: "localhost",
-    user: "root",
-    password: "root",
-    database: "FinalProject",
+    user: "nodeuser",
+    password: "nodeuser@1234",
+    database: "finalproject2",
 });
 
 function execSql(statement, values) {
     return new Promise(function (res, rej) {
-        con.query(statement, values, function (err, result) {
+        if (values !== null) {
+            con.query(statement, values, function (err, result) {
+                if (err) rej(err);
+                else res(result);
+            });
+        }
+        con.query(statement, function (err, result) {
             if (err) rej(err);
             else res(result);
         });

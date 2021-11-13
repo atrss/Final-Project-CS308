@@ -2,13 +2,15 @@
  * @module
  */
 
- import {
+import {
     chooseReversal,
     choosePoint,
     newPattern,
     chooseImage,
     currentDateTime,
     respCategory,
+    randomNumber,
+    relearned,
 } from "./functions.js";
 
 import { Pattern } from "./pattern.js";
@@ -25,13 +27,13 @@ const pattern1 = new Pattern(
         document.getElementById("arrow2")
     ),
     face = document.getElementById("face"),
-    startTime = currentDateTime(),;
+    startTime = currentDateTime();
 
 /**
  * Checks if the current move has expired beyond the time.
  */
 const moveExpired = (loading) => {
-    console.log("moveExpired!!!");
+    console.log("moveExpired");
     if (!loading) {
         setStyle(0, 0);
     }
@@ -46,9 +48,9 @@ let loading = false,
     consecutive = 0,
     time = new Date().getTime(),
     points = 0,
-    timeTaken = 0,
-    reversals = 0,
+    totalReversals = 0,
     countICFeedback = 0,
+    totalPointsAcrossBlocks = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
 const startGame = () => {
@@ -102,6 +104,15 @@ const updateBlockNumber = () => {
 };
 
 /**
+ * Probability: Endgame.
+ */
+const endTheGame = () => {
+    document.getElementById(
+        "message"
+    ).textContent = `Game over! Thanks for playing!`;
+};
+
+/**
  * Prepares for next move by hiding the arrows, and adds time taken in the previous move.
  */
 const prepareNextMove = () => {
@@ -109,29 +120,24 @@ const prepareNextMove = () => {
     pattern2.arrow.visibility = "hidden";
     const currentTime = new Date().getTime();
     timeTakeninBlock += currentTime - time;
-    timeTaken += currentTime - time;
     time = currentTime;
     if (timeTakeninBlock > TIME_IN_BLOCK) {
         console.log("time for new block", timeTakeninBlock);
         startGame();
+        totalPointsAcrossBlocks += points;
         points = 0;
         updateBlockNumber();
         timeTakeninBlock = 0;
-        reverals = 0,
-        consecutive = 0,
-        blocksCompleted++;
-        totalPointsAcrossBlocks += points;
+        (totalReversals = 0), (consecutive = 0), blocksCompleted++;
         if (blocksCompleted == 3) {
-            // end the game
-        } else {
-            // add block
-            //display new game
+            return true;
         }
-    } else {
-        timeout = setTimeout(() => {
-            moveExpired(loading);
-        }, TIME_FOR_MOVE);
     }
+    timeout = setTimeout(() => {
+        moveExpired(loading);
+    }, TIME_FOR_MOVE);
+
+    return false;
 };
 
 /**
@@ -160,11 +166,11 @@ const setStyle = (key, point) => {
     }
 
     if (consecutive == rev) {
+        console.log("reversed");
         [pattern1.luck, pattern2.luck] = [pattern2.luck, pattern1.luck];
-        rev = chooseReversal();
         hasReversed = true;
         maxCorrectChoices = 0;
-        reversals++;
+        totalReversals++;
         countICFeedback = 0;
     }
 
@@ -183,8 +189,13 @@ const setStyle = (key, point) => {
     }
 
     showLoadingScreen();
-    prepareNextMove();
-    // addCurrentData();
+    const endgame = prepareNextMove();
+    if (endgame) {
+        savingData();
+        endTheGame();
+        return;
+    }
+    addCurrentData(key, point);
     hideLoadingScreen();
 };
 
@@ -204,14 +215,15 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-
 let raw_data = [];
 
 // adding data for this block
-const addCurrentData = (current_res, point, key) => {
+const addCurrentData = (key, point) => {
+    console.log("addCurrentData", point, key);
+    const current_res = key === "e" ? pattern1 : key === "i" ? pattern2 : null;
     const correct_res = pattern1.luck === "lucky" ? pattern1 : pattern2;
-    countICFeedback += (point === -1 && current_res.luck === "unlucky" ? 1 : 0);
-    
+    countICFeedback += point === -1 && current_res.luck === "unlucky" ? 1 : 0;
+
     let current_data = [];
     current_data.push(startTime); // 'date'
     current_data.push(blocksCompleted); // 'values.countBlocks '
@@ -220,33 +232,52 @@ const addCurrentData = (current_res, point, key) => {
     current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
     current_data.push(maxCorrectChoices); // 'values.maxCorrectChoices'
     current_data.push(Number(hasReversed)); // 'values.reversal'
-    current_data.push(relearned(hasReversed, point, reversals)); // 'values.relearned'
-    current_data.push(respCategory(current_res, point, correct_res, hasReversed)); // 'values.respCategory'
+    current_data.push(relearned(hasReversed, point, totalReversals)); // 'values.relearned'
+    current_data.push(
+        respCategory(
+            current_res,
+            point,
+            correct_res,
+            hasReversed,
+            totalReversals
+        )
+    ); // 'values.respCategory'
     current_data.push(consecutive); // 'values.countConsecutiveCorrect'
     current_data.push(point === -1 ? 1 : 2); // 'values.feedback'
-    current_data.push(countICFeedback); // 'values.countICFeedback' 
-    current_data.push(reversals); // 'values.countReversals'
+    current_data.push(countICFeedback); // 'values.countICFeedback'
+    current_data.push(totalReversals); // 'values.countReversals'
     current_data.push(totalPointsAcrossBlocks); // totalPoints
-    current_data.push(key.charCodeAt(0)); // response
+    current_data.push(String(key).charCodeAt(0)); // response
     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
     current_data.push(current_res === correct_res ? 1 : 0); //correct
 
     raw_data.push(current_data);
-}
-
+};
 
 /**
  * Function for saving the data.
  */
 const savingData = () => {
-    // whats i = the number of participants' data file
-    
-    const create_table = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
+    const n = randomNumber();
+    const create_table = `CREATE TABLE IF NOT EXISTS Data_${startTime}_${n} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
+    const insert_rows = `INSERT INTO Data_${startTime}_${n} (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
 
-    const query = `INSERT INTO ProjectNEWTable (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
-    
-    // use API
-    //execSqlSync(sql1); // TODO: name of table
-    //execSqlSync(query, [raw_data]); // [raw_data] to insert multiple rows
+    fetch("/addtoDB", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            sql: create_table,
+            data: null,
+        }),
+    }).then(console.log("data created"));
+
+    fetch("/addtoDB", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            sql: insert_rows,
+            data: [raw_data],
+        }),
+    }).then(console.log("all rows inserted"));
 };
