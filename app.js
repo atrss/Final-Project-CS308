@@ -9,6 +9,10 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(views, "intro1.html"));
 });
 
+app.get("/intro_2", (req, res) => {
+    res.sendFile(path.join(views, "intro2.html"));
+});
+
 app.get("/game", (req, res) => {
     res.sendFile(path.join(views, "game.html"));
 });
