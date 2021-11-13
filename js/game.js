@@ -23,7 +23,8 @@ const pattern1 = new Pattern(
         null,
         document.getElementById("arrow2")
     ),
-    face = document.getElementById("face");
+    face = document.getElementById("face"),
+    startTime = currentDateTime();
 
 let loading = false,
     rev = chooseReversal(),
@@ -83,7 +84,7 @@ const prepareNextMove = () => {
     pattern2.arrow.visibility = "hidden";
     time = new Date().getTime();
     timeTaken += time;
-    if (timeTaken > TIME_IN_BLOCK) {
+    if (!checkIfBlockEnded()) {
         // time for new block
         [pattern1, pattern2] = startGame();
         points = 0;
@@ -156,63 +157,44 @@ document.addEventListener("keydown", (e) => {
 
 // TODO
 
-// const raw_dataHeader = [
-//     "date",
-//     "time",
-//     "blocknum",
-//     "values.countBlocks",
-//     "values.index_correctChoice",
-//     "values.index_incorrectChoice",
-//     "values.correctChoicePosition",
-//     "values.maxCorrectChoices",
-//     "values.reversal",
-//     "values.relearned",
-//     "values.respCategory",
-//     "values.countConsecutiveCorrect",
-//     "values.feedback",
-//     "values.countICFeedback",
-//     "values.countReversals",
-//     "values.totalPoints",
-//     "values.iti",
-//     "presentedCorrectStim",
-//     "presentedIncorrectStim",
-//     "response",
-//     "correct",
-// ];
+let raw_data = [];
 
-// let raw_data = [];
+// adding data for this block
+function addCurrentData(current_res, reversal, respCategory) {
+    const correct_res = pattern1.luck === "lucky" ? pattern1 : pattern2;
 
-// // adding data for this block
-// function addCurrentData(current_res, correct_res) {
-//     let current_data = [];
-//     current_data.push(currentDateTime); // 'date'
-//     current_data.push(blocksCompleted); // 'values.countBlocks '
-//     current_data.push(correct_res.img); // 'values.index_correctChoice'
-//     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // 'values.index_incorrectChoice'
-//     current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
-//     current_data.push((i = current_res === correct_res ? ++i : 0)); // 'values.maxCorrectChoices'
-//     current_data.push(); // 'values.reversal'
-//     current_data.push(); // 'values.relearned'
-//     current_data.push(); // 'values.respCategory'
-//     current_data.push(); // 'values.countConsecutiveCorrect'
-//     current_data.push(); // 'values.feedback'
-//     current_data.push(); // 'values.countICFeedback'
-//     current_data.push(reversalss); // 'values.countReversals'
-//     current_data.push(document.getElementById("points".textContent));
-//     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img);
-//     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img);
-//     current_data.push(current_res === correct_res ? 1 : 0); //correct
+    let current_data = [];
+    current_data.push(startTime); // 'date'
+    current_data.push(blocksCompleted); // 'values.countBlocks '
+    current_data.push(correct_res.img); // 'values.index_correctChoice'
+    current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // 'values.index_incorrectChoice'
+    current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
+    //TODO current_data.push((i = current_res === correct_res ? ++i : 0)); // 'values.maxCorrectChoices'
+    current_data.push(reversal); // 'values.reversal'
+    current_data.push(); // 'values.relearned'
+    current_data.push(); // 'values.respCategory'
+    current_data.push(); // 'values.countConsecutiveCorrect'
+    current_data.push(); // 'values.feedback'
+    current_data.push(); // 'values.countICFeedback'
+    current_data.push(reversalss); // 'values.countReversals'
+    current_data.push(document.getElementById("points").textContent); // ??
+    // TODO response
+    current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
+    current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
+    current_data.push(current_res === correct_res ? 1 : 0); //correct
 
-//     raw_data.push(current_data);
-// }
+    raw_data.push(current_data);
+}
 
-// /**
-//  * Function for saving the data.
-//  */
-// const savingData = () => {
-//     const sql1 = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
+/**
+ * Function for saving the data.
+ */
+const savingData = () => {
+    // whats i ?
+    // add sql for summary wala also
+    const sql1 = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
 
-//     const query = `INSERT INTO ProjectNEWTable (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
-//     execSqlSync(sql1, raw_data);
-//     execSqlSync(query, raw_data);
-// };
+    const query = `INSERT INTO ProjectNEWTable (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
+    execSqlSync(sql1); // TODO: name of table
+    execSqlSync(query, [raw_data]);
+};
