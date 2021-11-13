@@ -36,7 +36,7 @@ const moveExpired = (loading) => {
 };
 
 let loading = false,
-    rev = chooseReversal(),
+    rev,
     blocksCompleted = 0,
     timeTakeninBlock = 0,
     consecutive = 0,
@@ -46,6 +46,7 @@ let loading = false,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
 const startGame = () => {
+    rev = chooseReversal();
     [pattern1.img, pattern2.img] = newPattern();
     [pattern1.luck, pattern2.luck] = chooseImage();
 };
@@ -71,11 +72,6 @@ const hideLoadingScreen = () => {
 };
 
 /**
- * @returns Checks if current block as ended.
- */
-const checkIfBlockEnded = () => timeTakeninBlock < TIME_IN_BLOCK;
-
-/**
  * @param {Number} point - Add point to the total points and updates the points.
  */
 const addPoints = (point) => {
@@ -94,7 +90,9 @@ const updatePoints = () => {
  * Updates block on the DOM.
  */
 const updateBlockNumber = () => {
-    document.getElementById("blockNumber").textContent = blocksCompleted;
+    document.getElementById(
+        "message"
+    ).textContent = `Block ${blocksCompleted} Ended. Get Ready for next block!`;
 };
 
 /**
@@ -111,14 +109,15 @@ const prepareNextMove = () => {
         console.log("time for new block", timeTakeninBlock);
         startGame();
         points = 0;
+        updateBlockNumber();
+        timeTakeninBlock = 0;
+
         blocksCompleted++;
         if (blocksCompleted == 3) {
             // end the game
         } else {
             // add block
             //display new game
-            updateBlockNumber();
-            timeTakeninBlock = 0;
         }
     } else {
         timeout = setTimeout(() => {
@@ -140,22 +139,28 @@ const setStyle = (key, point) => {
 
     if (point === 1) {
         face.src = "./images/smiley.png";
+        consecutive++;
     } else {
         face.src = "./images/frowny.jpg";
+        consecutive = 0;
+    }
+
+    if (consecutive == rev) {
+        // reversal ka code daalna he
     }
 
     if (arrow !== null && arrow.style.visibility == "hidden") {
         arrow.style.visibility = "visible";
         setTimeout(() => {
             arrow.style.visibility = "hidden";
-        }, 300);
+        }, 500);
     }
 
     if (face.style.visibility == "hidden") {
         face.style.visibility = "visible";
         setTimeout(() => {
             face.style.visibility = "hidden";
-        }, 300);
+        }, 500);
     }
 
     showLoadingScreen();
