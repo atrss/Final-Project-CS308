@@ -164,7 +164,9 @@ function onsuccess(){
     [3, 0],
     [0]
   ];
-  points = points + 3 - num_trials;
+  if(problem!==0){
+    points = points + 3 - num_trials;
+  }
   curr_data[14]=1
   curr_data[15]=3-num_trials
   curr_data[16]=points
@@ -253,7 +255,18 @@ function next(){
   problem_time_start = new Date().getTime();
   move_start_time = new Date().getTime();
   movestring ="";
-  curr_data = [0,0,0,0,0,movestring,0,0,0,0,0,1,problem+1,moves[problem],0,0,points]
+  curr_data = [0,0,0,0,0,movestring,0,0,0,0,0,1,problem,moves[problem],0,0,points]
+  var b1 = getPractice();
+  document.getElementById('main').innerHTML = b1;
+}
+
+function practice(){
+  problem = 0;
+  prev_prob = problem;
+  problem_time_start = new Date().getTime();
+  move_start_time = new Date().getTime();
+  movestring ="";
+  curr_data = [0,0,0,0,0,movestring,0,0,0,0,0,1,problem,moves[problem],0,0,points]
   var b1 = getPractice();
   document.getElementById('main').innerHTML = b1;
 }
@@ -264,7 +277,7 @@ Function which shows the information about the user's current attempt
 @returns - The HTML code corresponding to the information displayed along with the problem
 */
 var currInfo= function(){
-  var problemno = problem+1
+  var problemno = problem
   var attempt = num_trials+1
   var out = '<div class = "score_canva"><div>Allowed Moves: ' + moves[problem] + '</div><div>Attempt: ' + attempt+ '</div><div>Problem Number: ' + problemno + '</div><div>Your Moves: ' + num_moves+ '</div></div>'
   return out
@@ -291,7 +304,7 @@ var getPractice = function() {
     return feedback + button
   }
   else if(prev_prob!== problem){
-    var probno = problem+1;
+    var probno = problem;
     var text = '<div class="centerv">  <div  class = "text2">the next problem is problem number '+ probno+'. <br> Press next to begin</div>'
     var button = '<div><input type= "button" class="button-two" onclick = "next()" value="Next" ></input></div></div>'
     return text + button
@@ -305,7 +318,12 @@ var getPractice = function() {
     time1 = (time1/1000) % 1000;
     var canvas = '<div class = tol_canvas></div>'
     var feedback = '<div class="text2"><h1>You got it!!</h1></div>'
-    var button = '<div><input type= "button" class="button-two" onclick = "onsuccess()" value="Next"></input></div>'
+    if(problem!==0){
+      var button = '<div><input type= "button" class="button-two" onclick = "onsuccess()" value="Next"></input></div>'
+    }
+    else{
+      var button = '<div><input type= "button" class="button-two" onclick = "onsuccess()" value="End Practice"></input></div>'
+    }
     return canvas + referenceBoard + goal + feedback + button
   }
   else{
@@ -341,12 +359,17 @@ var points = 0;
 /**
  * The variable problem stores the current problem number(0 for the 1st problem, 1 for the 2nd problem and so on)
 */
-var problem = 0;
+var problem = 1;
 
 /**
  * The variable configurations stores the arrangements of the target board for all the 12 problems
  */
 var configurations = [
+  [
+    [1, 0, 0],
+    [3, 0],
+    [2]
+  ],
   [
     [0, 0, 0],
     [3, 1],
@@ -413,7 +436,7 @@ var configurations = [
 /**
  * The array moves stores the minimum number of moves for all the 12 problems
  */
-var moves = [2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
+var moves = [1, 2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
 
 /**
  * The variable num_moves stores the number of moves for the current attempt

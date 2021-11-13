@@ -107,6 +107,8 @@ html, body {
   background-color:#eeeeee;
   border: none;
   padding: 10px;
+  margin-left: 2%;
+  margin-right: 2%;
   width: 150px;
   transition: 0.1s;
 }
