@@ -253,7 +253,7 @@ const addCurrentData = (key, point) => {
     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
     current_data.push(current_res === correct_res ? 1 : 0); //correct
 
-    raw_data.push(current_data);
+    raw_data.push(current_data.slice());
 };
 
 /**
@@ -261,24 +261,17 @@ const addCurrentData = (key, point) => {
  */
 const savingData = () => {
     const n = randomNumber();
-    const create_table = `CREATE TABLE IF NOT EXISTS Data_${n} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice VARCHAR(100), values_index_incorrectChoice VARCHAR(100), values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory VARCHAR(10), values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, presentedCorrectStim VARCHAR(100), presentedIncorrectStim VARCHAR(100), response INT, correct INT);`;
-    const insert_rows = `INSERT INTO Data_${n} (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
-
-    fetch("/addtoDB", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            sql: create_table,
-            data: null,
-        }),
-    }).then(console.log("data created"));
-
-    fetch("/addtoDB", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            sql: insert_rows,
-            data: [raw_data],
-        }),
-    }).then(console.log("all rows inserted"));
+    var csv = 'date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct\n';
+ 
+    raw_data.forEach(function(row) {
+            csv += row.join(',');
+            csv += "\n";
+    });
+ 
+    var hiddenElement = document.createElement('a');
+    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = `probData${n}.csv`;
+    hiddenElement.click();
 };
+
