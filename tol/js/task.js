@@ -1,4 +1,8 @@
 /**
+ * @module
+ */
+
+/**
  * global variable to store the time for start of each attempt
 */
 var problem_time_start = 0;
