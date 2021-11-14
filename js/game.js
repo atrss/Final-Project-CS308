@@ -233,7 +233,7 @@ const addCurrentData = (key, point) => {
     current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
     current_data.push(maxCorrectChoices); // 'values.maxCorrectChoices'
     current_data.push(Number(hasReversed)); // 'values.reversal'
-    current_data.push(relearned(hasReversed, point, totalReversals)); // 'values.relearned'
+    current_data.push(Number(relearned(hasReversed, point, totalReversals))); // 'values.relearned'
     current_data.push(
         respCategory(
             current_res,
@@ -261,7 +261,7 @@ const addCurrentData = (key, point) => {
  */
 const savingData = () => {
     const n = randomNumber();
-    const create_table = `CREATE TABLE IF NOT EXISTS Data_${n} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
+    const create_table = `CREATE TABLE IF NOT EXISTS Data_${n} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice VARCHAR(100), values_index_incorrectChoice VARCHAR(100), values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory VARCHAR(10), values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, presentedCorrectStim VARCHAR(100), presentedIncorrectStim VARCHAR(100), response INT, correct INT);`;
     const insert_rows = `INSERT INTO Data_${n} (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
 
     fetch("/addtoDB", {
