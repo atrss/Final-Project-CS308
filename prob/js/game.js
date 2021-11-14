@@ -63,21 +63,6 @@ const startGame = () => {
 
 startGame();
 
-/**
- * Shows the loading screen.
- */
-const showLoadingScreen = () => {
-    loading = true;
-    document.getElementsByClassName("main")[0].style.visibility = "hidden";
-    document.getElementsByClassName("loading")[0].style.display = "block";
-    document.getElementById("message").textContent = "Loading next move...";
-};
-
-const sleep = (ms) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {}, ms);
-    });
-};
 
 /**
  * Hides the loading screen.
@@ -159,7 +144,7 @@ const setStyle = (key, point) => {
     console.log("setStyle", key, point);
     const arrow =
         key === "e" ? pattern1.arrow : key === "i" ? pattern2.arrow : null;
-
+    
     if (point === 1) {
         face.src = "./images/smiley.png";
         consecutive++;
@@ -197,7 +182,16 @@ const setStyle = (key, point) => {
         }, 500);
     }
 
-    setTimeout(showLoadingScreen, 500);
+    if(point==0 && key ==0){
+        face.style.visibility = "visible";
+        const new_arrow = ((pattern1==="lucky") ? pattern1.arrow : pattern2.arrow);
+        new_arrow.style.visibility = "visible";
+        setTimeout(() => {
+            face.style.visibility = "hidden";
+            new_arrow.style.visibility = "hidden";
+        }, 500);
+    }
+
     const endgame = prepareNextMove();
     if (endgame) {
         savingData();
@@ -205,7 +199,7 @@ const setStyle = (key, point) => {
         return;
     }
     addCurrentData(key, point);
-    setTimeout(hideLoadingScreen, 3000);
+    setTimeout(hideLoadingScreen, 1000);
 };
 
 document.addEventListener("keydown", (e) => {
@@ -262,7 +256,9 @@ const addCurrentData = (key, point) => {
     current_data.push(countICFeedback); // 'values.countICFeedback'
     current_data.push(totalReversals); // 'values.countReversals'
     current_data.push(totalPointsAcrossBlocks); // totalPoints
-    current_data.push(String(key).charCodeAt(0)); // response
+    current_data.push(response = (key) => {
+        return (key=='e' ? 18 : (key='i' ? 23: 57));
+    }); // response
     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
     current_data.push(current_res === correct_res ? 1 : 0); //correct

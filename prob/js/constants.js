@@ -26,4 +26,4 @@ export const /** @constant
     @type {Number}
     @default
 */
-    TIME_FOR_MOVE = 5 * MILLI; // 10sec
+    TIME_FOR_MOVE = 3 * MILLI; // 10sec
