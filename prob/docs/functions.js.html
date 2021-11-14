@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#~chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#~newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~checkIfBlockEnded">checkIfBlockEnded</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#.newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~endTheGame">endTheGame</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~moveExpired">moveExpired</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~savingData">savingData</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updateBlockNumber">updateBlockNumber</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -46,14 +46,13 @@
  * @module
  */
 
-import { POINT_PROB, TIME_FOR_MOVE, TIME_IN_BLOCK } from "./constants.js";
+import { POINT_PROB } from "./constants.js";
 
 /**
  * @function
  * @returns Return a random combination for two pattern images.
  */
-const chooseImage = () => {
-    console.log("chooseImage");
+export const chooseImage = () => {
     if (Math.random() > 0.5) {
         return ["lucky", "unlucky"];
     } else {
@@ -67,7 +66,6 @@ const chooseImage = () => {
  * @returns The point given for selecting the image.
  */
 export const choosePoint = (imageType) => {
-    console.log("choosePoint");
     let point = Math.random() &lt; POINT_PROB ? 1 : -1;
     if (imageType === "unlucky") {
         point *= -1;
@@ -79,7 +77,7 @@ export const choosePoint = (imageType) => {
  * @function
  * @returns Filename of two new pattern images.
  */
-const newPattern = () => {
+export const newPattern = () => {
     let selected = [];
     while (selected.length != 2) {
         const randomNo = Math.floor(1 + Math.random() * 6);
@@ -91,25 +89,88 @@ const newPattern = () => {
     });
 };
 
+/**
+ *
+ * @returns consecutive correct turns after which pattern is reversed.
+ */
 export const chooseReversal = () => {
     const items = [10, 11, 12, 13, 14, 15];
     return items[Math.floor(Math.random() * items.length)];
 };
 
 /**
- * Checks if the current move has expired beyond the time.
+ *
+ * @returns The current date time in string.
  */
-export const moveExpired = (loading) => {
-    console.log("moveExpired!!!");
-    if (!loading) {
-        setStyle(false, null);
+export const currentDateTime = () => {
+    const currentdate = new Date();
+    return (
+        currentdate.getFullYear() +
+        "-" +
+        (currentdate.getMonth() + 1) +
+        "-" +
+        currentdate.getDate() +
+        " " +
+        currentdate.getHours() +
+        ":" +
+        currentdate.getMinutes() +
+        ":" +
+        currentdate.getSeconds()
+    );
+};
+
+/**
+ *
+ * @param {Pattern} current_res - the pattern user selected.
+ * @param {Number} point - point given in this move.
+ * @param {Pattern} correct_res - the lucky pattern.
+ * @param {Boolean} hasReversed - if the last turn reversed the pattern this will be true.
+ * @param {Number} reversals - how many reversals has been done till now.
+ * @returns - the response category for the user.
+ */
+export const respCategory = (
+    current_res,
+    point,
+    correct_res,
+    hasReversed,
+    reversals
+) => {
+    if (point === 0) {
+        return "NR";
+    } else if (point === 1 &amp;&amp; current_res === correct_res &amp;&amp; hasReversed) {
+        // C-RE = first correct after reversal error or 'lucky guess' (selected correct outcome and received 'happy' feedback)
+        return "C-RE";
+    } else if (current_res === correct_res &amp;&amp; point === 1) {
+        // C = correct (selected correct/winning pattern and received 'happy' feedback)
+        return "C";
+    } else if (current_res === correct_res &amp;&amp; point === -1 &amp;&amp; hasReversed) {
+        // C-RE (PE) = first correct after reversal errors (selected correct/winning pattern BUT received 'unhappy' feedback)
+        return "C-RE (PE)";
+    } else if (current_res === correct_res &amp;&amp; point === -1) {
+        // PE = correct (selected correct/winning patterbBUT received 'unhappy' feedback)
+        return "PE";
+    } else if (relearned(hasReversed, point, reversals)) {
+        return "RE";
+    } else if (point === 1 &amp;&amp; correct_res !== current_res) {
+        return "E (PE)";
+    } else if (point === -1 &amp;&amp; correct_res !== current_res) {
+        return "E";
     }
 };
 
-export const startGame = (pattern1, pattern2) => {
-    [pattern1.img, pattern2.img] = newPattern();
-    [pattern1.luck, pattern2.luck] = chooseImage();
-    return [pattern1, pattern2];
+/**
+ *
+ * @param {Boolean} hasReversed - if the last turn reversed the pattern this will be true.
+ * @param {Number} point - point given in this move.
+ * @param {Number} reversals - how many reversals has been done till now.
+ * @returns - whether the user has learned the pattern after reversal.
+ */
+export const relearned = (hasReversed, point, reversals) => {
+    // 1 = participant has likely learned the reversed probability assignment
+    // => the first selection of the new lucky pattern after a reversal
+    // (lucky guesses excluded)
+    // 0 = participant has likey not learned the reversed probability assignment
+    return !hasReversed &amp;&amp; point === 1 &amp;&amp; reversals > 0 ? 1 : 0;
 };
 </code></pre>
         </article>
@@ -125,7 +186,7 @@ export const startGame = (pattern1, pattern2) => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Nov 12 2021 16:32:52 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Nov 14 2021 16:09:30 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

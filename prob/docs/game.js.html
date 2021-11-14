@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#~chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#~newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~checkIfBlockEnded">checkIfBlockEnded</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#.newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~endTheGame">endTheGame</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~moveExpired">moveExpired</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~savingData">savingData</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updateBlockNumber">updateBlockNumber</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -49,8 +49,11 @@
 import {
     chooseReversal,
     choosePoint,
-    startGame,
-    moveExpired,
+    newPattern,
+    chooseImage,
+    currentDateTime,
+    respCategory,
+    relearned,
 } from "./functions.js";
 
 import { Pattern } from "./pattern.js";
@@ -66,17 +69,40 @@ const pattern1 = new Pattern(
         null,
         document.getElementById("arrow2")
     ),
-    face = document.getElementById("face");
+    face = document.getElementById("face"),
+    startTime = currentDateTime();
+
+/**
+ * Checks if the current move has expired beyond the time.
+ */
+const moveExpired = (loading) => {
+    console.log("moveExpired");
+    if (!loading) {
+        setStyle(0, 0);
+    }
+};
 
 let loading = false,
+    rev,
+    hasReversed = false,
+    maxCorrectChoices = 0,
     blocksCompleted = 0,
     timeTakeninBlock = 0,
+    consecutive = 0,
     time = new Date().getTime(),
     points = 0,
-    timeTaken = 0,
+    totalReversals = 0,
+    countICFeedback = 0,
+    totalPointsAcrossBlocks = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
-[pattern1, pattern2] = startGame();
+const startGame = () => {
+    rev = chooseReversal();
+    [pattern1.img, pattern2.img] = newPattern();
+    [pattern1.luck, pattern2.luck] = chooseImage();
+};
+
+startGame();
 
 /**
  * Shows the loading screen.
@@ -97,11 +123,6 @@ const hideLoadingScreen = () => {
 };
 
 /**
- * @returns Checks if current block as ended.
- */
-const checkIfBlockEnded = () => timeTakeninBlock &lt; TIME_IN_BLOCK;
-
-/**
  * @param {Number} point - Add point to the total points and updates the points.
  */
 const addPoints = (point) => {
@@ -117,20 +138,49 @@ const updatePoints = () => {
 };
 
 /**
+ * Updates block on the DOM.
+ */
+const updateBlockNumber = () => {
+    document.getElementById(
+        "message"
+    ).textContent = `Block ${blocksCompleted} Ended. Get Ready for next block!`;
+};
+
+/**
+ * Probability: Endgame.
+ */
+const endTheGame = () => {
+    document.getElementById(
+        "message"
+    ).textContent = `Game over! Thanks for playing!`;
+};
+
+/**
  * Prepares for next move by hiding the arrows, and adds time taken in the previous move.
  */
 const prepareNextMove = () => {
     pattern1.arrow.visibility = "hidden";
     pattern2.arrow.visibility = "hidden";
-    time = new Date().getTime();
-    timeTaken += time;
-    if (timeTaken > TIME_IN_BLOCK) {
-        // time for new block
-    } else {
-        timeout = setTimeout(() => {
-            moveExpired(loading);
-        }, TIME_FOR_MOVE);
+    const currentTime = new Date().getTime();
+    timeTakeninBlock += currentTime - time;
+    time = currentTime;
+    if (timeTakeninBlock > TIME_IN_BLOCK) {
+        console.log("time for new block", timeTakeninBlock);
+        startGame();
+        totalPointsAcrossBlocks += points;
+        points = 0;
+        updateBlockNumber();
+        timeTakeninBlock = 0;
+        (totalReversals = 0), (consecutive = 0), blocksCompleted++;
+        if (blocksCompleted == 3) {
+            return true;
+        }
     }
+    timeout = setTimeout(() => {
+        moveExpired(loading);
+    }, TIME_FOR_MOVE);
+
+    return false;
 };
 
 /**
@@ -146,27 +196,49 @@ const setStyle = (key, point) => {
 
     if (point === 1) {
         face.src = "./images/smiley.png";
+        consecutive++;
     } else {
         face.src = "./images/frowny.jpg";
+        maxCorrectChoices = Math.max(maxCorrectChoices, consecutive);
+        consecutive = 0;
+    }
+
+    if (hasReversed) {
+        // next move after reversal
+        hasReversed = false;
+    }
+
+    if (consecutive == rev) {
+        console.log("reversed");
+        [pattern1.luck, pattern2.luck] = [pattern2.luck, pattern1.luck];
+        hasReversed = true;
+        maxCorrectChoices = 0;
+        totalReversals++;
+        countICFeedback = 0;
     }
 
     if (arrow !== null &amp;&amp; arrow.style.visibility == "hidden") {
         arrow.style.visibility = "visible";
         setTimeout(() => {
             arrow.style.visibility = "hidden";
-        }, 300);
+        }, 500);
     }
 
     if (face.style.visibility == "hidden") {
         face.style.visibility = "visible";
         setTimeout(() => {
             face.style.visibility = "hidden";
-        }, 300);
+        }, 500);
     }
 
     showLoadingScreen();
-    prepareNextMove();
-    // addCurrentData();
+    const endgame = prepareNextMove();
+    if (endgame) {
+        savingData();
+        endTheGame();
+        return;
+    }
+    addCurrentData(key, point);
     hideLoadingScreen();
 };
 
@@ -186,82 +258,65 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// TODO
+let raw_data = [];
 
-// const raw_dataHeader = [
-//     "date",
-//     "time",
-//     "blocknum",
-//     "values.countBlocks",
-//     "values.index_correctChoice",
-//     "values.index_incorrectChoice",
-//     "values.correctChoicePosition",
-//     "values.maxCorrectChoices",
-//     "values.reversal",
-//     "values.relearned",
-//     "values.respCategory",
-//     "values.countConsecutiveCorrect",
-//     "values.feedback",
-//     "values.countICFeedback",
-//     "values.countReversals",
-//     "values.totalPoints",
-//     "values.iti",
-//     "presentedCorrectStim",
-//     "presentedIncorrectStim",
-//     "response",
-//     "correct",
-// ];
+// adding data for this block
+const addCurrentData = (key, point) => {
+    console.log("addCurrentData", point, key);
+    const current_res = key === "e" ? pattern1 : key === "i" ? pattern2 : null;
+    const correct_res = pattern1.luck === "lucky" ? pattern1 : pattern2;
+    countICFeedback += point === -1 &amp;&amp; current_res.luck === "unlucky" ? 1 : 0;
 
-// let raw_data = [];
+    let current_data = [];
+    current_data.push(startTime); // 'date'
+    current_data.push(blocksCompleted + 1); // blocknum
+    current_data.push(blocksCompleted); // 'values.countBlocks '
+    current_data.push(correct_res.img); // 'values.index_correctChoice'
+    current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // 'values.index_incorrectChoice'
+    current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
+    current_data.push(maxCorrectChoices); // 'values.maxCorrectChoices'
+    current_data.push(Number(hasReversed)); // 'values.reversal'
+    current_data.push(Number(relearned(hasReversed, point, totalReversals))); // 'values.relearned'
+    current_data.push(
+        respCategory(
+            current_res,
+            point,
+            correct_res,
+            hasReversed,
+            totalReversals
+        )
+    ); // 'values.respCategory'
+    current_data.push(consecutive); // 'values.countConsecutiveCorrect'
+    current_data.push(point === -1 ? 1 : 2); // 'values.feedback'
+    current_data.push(countICFeedback); // 'values.countICFeedback'
+    current_data.push(totalReversals); // 'values.countReversals'
+    current_data.push(totalPointsAcrossBlocks); // totalPoints
+    current_data.push(String(key).charCodeAt(0)); // response
+    current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
+    current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
+    current_data.push(current_res === correct_res ? 1 : 0); //correct
 
-// const currentdate = new Date();
-// const currentDateTime =
-//     currentdate.getFullYear() +
-//     "-" +
-//     (currentdate.getMonth() + 1) +
-//     "-" +
-//     currentdate.getDate() +
-//     " " +
-//     currentdate.getHours() +
-//     ":" +
-//     currentdate.getMinutes() +
-//     ":" +
-//     currentdate.getSeconds();
+    raw_data.push(current_data.slice());
+};
 
-// // adding data for this block
-// function addCurrentData(current_res, correct_res) {
-//     let current_data = [];
-//     current_data.push(currentDateTime); // 'date'
-//     current_data.push(blocksCompleted); // 'values.countBlocks '
-//     current_data.push(correct_res.img); // 'values.index_correctChoice'
-//     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // 'values.index_incorrectChoice'
-//     current_data.push(correct_res === pattern1 ? 1 : 2); // 'values.correctChoicePosition'
-//     current_data.push((i = current_res === correct_res ? ++i : 0)); // 'values.maxCorrectChoices'
-//     current_data.push(); // 'values.reversal'
-//     current_data.push(); // 'values.relearned'
-//     current_data.push(); // 'values.respCategory'
-//     current_data.push(); // 'values.countConsecutiveCorrect'
-//     current_data.push(); // 'values.feedback'
-//     current_data.push(); // 'values.countICFeedback'
-//     current_data.push(reversalss); // 'values.countReversals'
-//     current_data.push(document.getElementById("points".textContent));
-//     current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img);
-//     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img);
-//     current_data.push(current_res === correct_res ? 1 : 0); //correct
+/**
+ * Function for saving the data.
+ */
+const savingData = () => {
+    let csv =
+        "date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct\n";
 
-//     raw_data.push(current_data);
-// }
+    raw_data.forEach(function (row) {
+        csv += row.join(",");
+        csv += "\n";
+    });
 
-// /**
-//  * Function for saving the data.
-//  */
-// const savingData = () => {
-//     const sql1 = `CREATE TABLE IF NOT EXISTS Data_${i} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
-
-//     const query = `INSERT INTO ProjectNEWTable (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
-//     execSqlSync(sql1, raw_data);
-//     execSqlSync(query, raw_data);
-// };
+    const hiddenElement = document.createElement("a");
+    hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+    hiddenElement.target = "_blank";
+    hiddenElement.download = `probData_${currentDateTime()}.csv`;
+    hiddenElement.click();
+};
 </code></pre>
         </article>
     </section>
@@ -276,7 +331,7 @@ document.addEventListener("keydown", (e) => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Nov 12 2021 16:32:52 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Nov 14 2021 16:09:30 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
