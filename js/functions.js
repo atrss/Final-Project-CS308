@@ -45,11 +45,19 @@ export const newPattern = () => {
     });
 };
 
+/**
+ *
+ * @returns consecutive correct turns after which pattern is reversed.
+ */
 export const chooseReversal = () => {
     const items = [10, 11, 12, 13, 14, 15];
     return items[Math.floor(Math.random() * items.length)];
 };
 
+/**
+ *
+ * @returns The current date time in string.
+ */
 export const currentDateTime = () => {
     const currentdate = new Date();
     return (
@@ -67,6 +75,15 @@ export const currentDateTime = () => {
     );
 };
 
+/**
+ *
+ * @param {Pattern} current_res - the pattern user selected.
+ * @param {Number} point - point given in this move.
+ * @param {Pattern} correct_res - the lucky pattern.
+ * @param {Boolean} hasReversed - if the last turn reversed the pattern this will be true.
+ * @param {Number} reversals - how many reversals has been done till now.
+ * @returns - the response category for the user.
+ */
 export const respCategory = (
     current_res,
     point,
@@ -97,18 +114,17 @@ export const respCategory = (
     }
 };
 
+/**
+ *
+ * @param {Boolean} hasReversed - if the last turn reversed the pattern this will be true.
+ * @param {Number} point - point given in this move.
+ * @param {Number} reversals - how many reversals has been done till now.
+ * @returns - whether the user has learned the pattern after reversal.
+ */
 export const relearned = (hasReversed, point, reversals) => {
     // 1 = participant has likely learned the reversed probability assignment
     // => the first selection of the new lucky pattern after a reversal
     // (lucky guesses excluded)
     // 0 = participant has likey not learned the reversed probability assignment
     return !hasReversed && point === 1 && reversals > 0 ? 1 : 0;
-};
-
-export const randomNumber = () => {
-    let n = "";
-    for (let i = 0; i < 5; i++) {
-        n += String(Math.floor(Math.random() * 9));
-    }
-    return n;
 };

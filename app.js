@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const { execSqlSync } = require("./driver.js");
 const cors = require("cors");
 
 const app = express();
@@ -23,13 +22,7 @@ app.get("/game", (req, res) => {
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/js", express.static(path.join(__dirname, "js")));
-
-app.post("/addtoDB", (req, res) => {
-    console.log(req.body);
-    const { sql, data } = req.body;
-    console.log(sql, data);
-    execSqlSync(sql, data);
-});
+app.use("/docs", express.static(path.join(__dirname, "docs")));
 
 app.listen(5000);
 console.log("http://localhost:5000");

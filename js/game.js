@@ -9,7 +9,6 @@ import {
     chooseImage,
     currentDateTime,
     respCategory,
-    randomNumber,
     relearned,
 } from "./functions.js";
 
@@ -260,18 +259,17 @@ const addCurrentData = (key, point) => {
  * Function for saving the data.
  */
 const savingData = () => {
-    const n = randomNumber();
-    var csv = 'date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct\n';
- 
-    raw_data.forEach(function(row) {
-            csv += row.join(',');
-            csv += "\n";
+    let csv =
+        "date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct\n";
+
+    raw_data.forEach(function (row) {
+        csv += row.join(",");
+        csv += "\n";
     });
- 
-    var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-    hiddenElement.target = '_blank';
-    hiddenElement.download = `probData${n}.csv`;
+
+    const hiddenElement = document.createElement("a");
+    hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+    hiddenElement.target = "_blank";
+    hiddenElement.download = `probData_${currentDateTime()}.csv`;
     hiddenElement.click();
 };
-
