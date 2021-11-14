@@ -64,6 +64,16 @@ const startGame = () => {
 startGame();
 
 /**
+ * Shows the loading screen.
+ */
+const showLoadingScreen = () => {
+  loading = true;
+  document.getElementsByClassName("main")[0].style.visibility = "hidden";
+  document.getElementsByClassName("loading")[0].style.display = "block";
+  document.getElementById("message").textContent = "Loading next move...";
+};
+
+/**
  * Hides the loading screen.
  */
 const hideLoadingScreen = () => {
@@ -124,6 +134,8 @@ const prepareNextMove = () => {
     (totalReversals = 0), (consecutive = 0), blocksCompleted++;
     if (blocksCompleted == 3) {
       return true;
+    } else {
+      setTimeout(showLoadingScreen(), 1500);
     }
   }
   timeout = setTimeout(() => {
@@ -181,7 +193,8 @@ const setStyle = (key, point) => {
     }, 500);
   }
 
-  if (point == 0 && key == 0) {
+  const endgame = prepareNextMove();
+  if (point == 0 && key == 0 && !loading) {
     face.style.visibility = "visible";
     const new_arrow = pattern1 === "lucky" ? pattern1.arrow : pattern2.arrow;
     new_arrow.style.visibility = "visible";
@@ -189,9 +202,9 @@ const setStyle = (key, point) => {
       face.style.visibility = "hidden";
       new_arrow.style.visibility = "hidden";
     }, 500);
+    loading = false;
   }
 
-  const endgame = prepareNextMove();
   if (endgame) {
     savingData();
     endTheGame();
@@ -202,10 +215,10 @@ const setStyle = (key, point) => {
 };
 
 document.addEventListener("keydown", (e) => {
-  e.key.toLowerCase();
-  if (!loading && (e.key === "e" || e.key === "i")) {
+  const check_key = e.key.toLowerCase();
+  if (!loading && (check_key === "e" || check_key === "i")) {
     clearTimeout(timeout);
-    const key = e.key;
+    const key = check_key;
     if (key === "e") {
       const point = choosePoint(pattern1.luck);
       setStyle(key, point);
@@ -250,9 +263,9 @@ const addCurrentData = (key, point) => {
   current_data.push(countICFeedback); // 'values.countICFeedback'
   current_data.push(totalReversals); // 'values.countReversals'
   current_data.push(totalPointsAcrossBlocks); // totalPoints
-  current_data.push(key === "e" ? 18 : key === "i" ? 23 : 57); // response
   current_data.push(correct_res === pattern1 ? pattern1.img : pattern2.img); // presentedCorrectStim
   current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // presentedIncorrectStim
+  current_data.push(key === "e" ? 18 : key === "i" ? 23 : 57); // response
   current_data.push(current_res === correct_res ? 1 : 0); //correct
 
   raw_data.push(current_data.slice());
