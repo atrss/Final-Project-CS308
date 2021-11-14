@@ -122,27 +122,28 @@ const prepareNextMove = () => {
   pattern1.arrow.visibility = "hidden";
   pattern2.arrow.visibility = "hidden";
   const currentTime = new Date().getTime();
+  let ms = 1000;
   timeTakeninBlock += currentTime - time;
   time = currentTime;
   if (timeTakeninBlock > TIME_IN_BLOCK) {
+    ms = 3000;
     console.log("time for new block", timeTakeninBlock);
+    blocksCompleted++;
+    setTimeout(updateBlockNumber, 500);
+    if (blocksCompleted === 3) {
+      return [true, null];
+    }
     startGame();
     totalPointsAcrossBlocks += points;
     points = 0;
-    updateBlockNumber();
     timeTakeninBlock = 0;
-    (totalReversals = 0), (consecutive = 0), blocksCompleted++;
-    if (blocksCompleted == 3) {
-      return true;
-    } else {
-      setTimeout(showLoadingScreen, 4000);
-    }
+    (totalReversals = 0), (consecutive = 0);
   }
   timeout = setTimeout(() => {
     moveExpired(loading);
   }, TIME_FOR_MOVE);
 
-  return false;
+  return [false, ms];
 };
 
 /**
@@ -194,25 +195,25 @@ const setStyle = (key, point) => {
     }, 500);
   }
 
-  const endgame = prepareNextMove();
-  if (point == 0 && key == 0 && !loading) {
+  if (point === 0 && key === 0) {
     face.style.visibility = "visible";
-    const new_arrow = pattern1 === "lucky" ? pattern1.arrow : pattern2.arrow;
+    const new_arrow = pattern1.luck === "lucky" ? pattern1.arrow : pattern2.arrow;
     new_arrow.style.visibility = "visible";
     setTimeout(() => {
       face.style.visibility = "hidden";
       new_arrow.style.visibility = "hidden";
     }, 500);
-    loading = false;
   }
 
+  setTimeout(showLoadingScreen, 500);
+  const [endgame, ms] = prepareNextMove();
   if (endgame) {
-    savingData();
     endTheGame();
+    savingData();
     return;
   }
   addCurrentData(key, point);
-  setTimeout(hideLoadingScreen, 1000);
+  setTimeout(hideLoadingScreen, ms);
 };
 
 document.addEventListener("keydown", (e) => {
