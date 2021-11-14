@@ -156,7 +156,7 @@ const setStyle = (key, point) => {
         consecutive++;
     } else {
         face.src = "./images/frowny.jpg";
-        maxCorrectChoices = Math.max([maxCorrectChoices, consecutive]);
+        maxCorrectChoices = Math.max(maxCorrectChoices, consecutive);
         consecutive = 0;
     }
 
@@ -226,6 +226,7 @@ const addCurrentData = (key, point) => {
 
     let current_data = [];
     current_data.push(startTime); // 'date'
+    current_data.push(blocksCompleted + 1); // blocknum
     current_data.push(blocksCompleted); // 'values.countBlocks '
     current_data.push(correct_res.img); // 'values.index_correctChoice'
     current_data.push(correct_res === pattern1 ? pattern2.img : pattern1.img); // 'values.index_incorrectChoice'
@@ -260,8 +261,8 @@ const addCurrentData = (key, point) => {
  */
 const savingData = () => {
     const n = randomNumber();
-    const create_table = `CREATE TABLE IF NOT EXISTS Data_${startTime}_${n} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, values_iti INT,  presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
-    const insert_rows = `INSERT INTO Data_${startTime}_${n} (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, values_iti, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?);`;
+    const create_table = `CREATE TABLE IF NOT EXISTS Data_${n} (date_time DATETIME, blocknum INT, values_countBlocks INT, values_index_correctChoice INT, values_index_incorrectChoice INT, values_correctChoicePosition INT, values_maxCorrectChoices INT,  values_reversal INT, values_relearned INT,values_respCategory INT, values_countConsecutiveCorrect INT, values_feedback INT, values_countICFeedback INT, values_countReversals INT, values_totalPoints INT, presentedCorrectStim INT, presentedIncorrectStim INT, response INT, correct INT);`;
+    const insert_rows = `INSERT INTO Data_${n} (date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
 
     fetch("/addtoDB", {
         method: "POST",
