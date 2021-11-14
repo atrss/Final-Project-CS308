@@ -135,7 +135,7 @@ const prepareNextMove = () => {
     if (blocksCompleted == 3) {
       return true;
     } else {
-      setTimeout(showLoadingScreen(), 1500);
+      setTimeout(showLoadingScreen, 4000);
     }
   }
   timeout = setTimeout(() => {
@@ -177,6 +177,7 @@ const setStyle = (key, point) => {
     maxCorrectChoices = 0;
     totalReversals++;
     countICFeedback = 0;
+    consecutive = 0;
   }
 
   if (arrow !== null && arrow.style.visibility == "hidden") {
