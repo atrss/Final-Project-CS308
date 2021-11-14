@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#.newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~endTheGame">endTheGame</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~moveExpired">moveExpired</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~savingData">savingData</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updateBlockNumber">updateBlockNumber</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#.chooseReversal">chooseReversal</a></li><li data-type='method'><a href="module-functions.html#.currentDateTime">currentDateTime</a></li><li data-type='method'><a href="module-functions.html#.newPattern">newPattern</a></li><li data-type='method'><a href="module-functions.html#.relearned">relearned</a></li><li data-type='method'><a href="module-functions.html#.respCategory">respCategory</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addCurrentData">addCurrentData</a></li><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~endTheGame">endTheGame</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~moveExpired">moveExpired</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~savingData">savingData</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~startGame">startGame</a></li><li data-type='method'><a href="module-game.html#~updateBlockNumber">updateBlockNumber</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -61,13 +61,32 @@
 <h2>TA: Harsh Katakwar</h2>
 <h2>Mentor: Akash K Rao/Shashank Uttrani</h2>
 <p>The probabilistic reversal-learning task and the Tower of London task are standard psychological tests for evaluating an individual's executive functioning and attentional control abilities. The web-based applications will be used for collecting data and for building cognitive models to predict human behavior in these tasks.</p>
-<p>https://www.millisecond.com/download/library/toweroflondon/</p>
-<p>https://www.millisecond.com/download/library/reversallearning/probabilisticreversallearningtask/</p>
-<h2>Docs</h2>
-<pre class="prettyprint source lang-bash"><code>npm install jsdoc docdash
+<p><a href="https://www.millisecond.com/download/library/toweroflondon/">Tower of London</a></p>
+<p><a href="https://www.millisecond.com/download/library/reversallearning/probabilisticreversallearningtask/">Probabilistic Reversal Learning</a></p>
+<h2>Installation and Running.</h2>
+<ul>
+<li>
+<p>Install node.js and npm first.</p>
+</li>
+<li>
+<p>For installing the dependencies.</p>
+</li>
+</ul>
+<pre class="prettyprint source lang-bash"><code>npm install
 </code></pre>
-<pre class="prettyprint source lang-bash"><code>jsdoc -c conf.json
-</code></pre></article>
+<ul>
+<li>For generating docs.</li>
+</ul>
+<pre class="prettyprint source lang-bash"><code>make
+</code></pre>
+<ul>
+<li>For running the server.</li>
+</ul>
+<pre class="prettyprint source lang-bash"><code>node index.js
+</code></pre>
+<ul>
+<li>Access the website at <a href="http://localhost:5000">http://localhost:5000</a></li>
+</ul></article>
     </section>
 
 
@@ -82,7 +101,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Nov 14 2021 16:09:30 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Nov 14 2021 19:49:41 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

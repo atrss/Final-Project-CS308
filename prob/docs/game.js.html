@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#.newPattern">newPattern</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~endTheGame">endTheGame</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~moveExpired">moveExpired</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~savingData">savingData</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~updateBlockNumber">updateBlockNumber</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Pattern.html">Pattern</a></li></ul><h3>Modules</h3><ul><li><a href="module-constants.html">constants</a></li><li><a href="module-functions.html">functions</a><ul class='methods'><li data-type='method'><a href="module-functions.html#.chooseImage">chooseImage</a></li><li data-type='method'><a href="module-functions.html#.choosePoint">choosePoint</a></li><li data-type='method'><a href="module-functions.html#.chooseReversal">chooseReversal</a></li><li data-type='method'><a href="module-functions.html#.currentDateTime">currentDateTime</a></li><li data-type='method'><a href="module-functions.html#.newPattern">newPattern</a></li><li data-type='method'><a href="module-functions.html#.relearned">relearned</a></li><li data-type='method'><a href="module-functions.html#.respCategory">respCategory</a></li></ul></li><li><a href="module-game.html">game</a><ul class='methods'><li data-type='method'><a href="module-game.html#~addCurrentData">addCurrentData</a></li><li data-type='method'><a href="module-game.html#~addPoints">addPoints</a></li><li data-type='method'><a href="module-game.html#~endTheGame">endTheGame</a></li><li data-type='method'><a href="module-game.html#~hideLoadingScreen">hideLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~moveExpired">moveExpired</a></li><li data-type='method'><a href="module-game.html#~prepareNextMove">prepareNextMove</a></li><li data-type='method'><a href="module-game.html#~savingData">savingData</a></li><li data-type='method'><a href="module-game.html#~setStyle">setStyle</a></li><li data-type='method'><a href="module-game.html#~showLoadingScreen">showLoadingScreen</a></li><li data-type='method'><a href="module-game.html#~startGame">startGame</a></li><li data-type='method'><a href="module-game.html#~updateBlockNumber">updateBlockNumber</a></li><li data-type='method'><a href="module-game.html#~updatePoints">updatePoints</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -96,6 +96,9 @@ let loading = false,
     totalPointsAcrossBlocks = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
+/**
+ * Starts the game by choose pattern image and their luck.
+ */
 const startGame = () => {
     rev = chooseReversal();
     [pattern1.img, pattern2.img] = newPattern();
@@ -260,7 +263,12 @@ document.addEventListener("keydown", (e) => {
 
 let raw_data = [];
 
-// adding data for this block
+/**
+ *
+ * @param {String} key - key pressed by the user.
+ * @param {Number} point - point given in this move.
+ * Processes the move, creates different variables and add them to a array; which is then pushed to a global array containing data for all the moves in this game.
+ */
 const addCurrentData = (key, point) => {
     console.log("addCurrentData", point, key);
     const current_res = key === "e" ? pattern1 : key === "i" ? pattern2 : null;
@@ -306,7 +314,7 @@ const savingData = () => {
     let csv =
         "date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct\n";
 
-    raw_data.forEach(function (row) {
+    raw_data.forEach((row) => {
         csv += row.join(",");
         csv += "\n";
     });
@@ -331,7 +339,7 @@ const savingData = () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Nov 14 2021 16:09:30 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Nov 14 2021 19:49:41 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

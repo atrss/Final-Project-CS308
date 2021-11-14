@@ -1,6 +1,6 @@
 {
     "source": {
-        "include": ["../README.md", "./js"],
+        "include": ["./js"],
         "includePattern": ".+\\.(js)$"
     },
     "opts": {

@@ -52,6 +52,9 @@ let loading = false,
     totalPointsAcrossBlocks = 0,
     timeout = setTimeout(moveExpired, TIME_FOR_MOVE);
 
+/**
+ * Starts the game by choose pattern image and their luck.
+ */
 const startGame = () => {
     rev = chooseReversal();
     [pattern1.img, pattern2.img] = newPattern();
@@ -216,7 +219,12 @@ document.addEventListener("keydown", (e) => {
 
 let raw_data = [];
 
-// adding data for this block
+/**
+ *
+ * @param {String} key - key pressed by the user.
+ * @param {Number} point - point given in this move.
+ * Processes the move, creates different variables and add them to a array; which is then pushed to a global array containing data for all the moves in this game.
+ */
 const addCurrentData = (key, point) => {
     console.log("addCurrentData", point, key);
     const current_res = key === "e" ? pattern1 : key === "i" ? pattern2 : null;
@@ -262,7 +270,7 @@ const savingData = () => {
     let csv =
         "date_time, blocknum, values_countBlocks, values_index_correctChoice, values_index_incorrectChoice,  values_correctChoicePosition, values_maxCorrectChoices,  values_reversal, values_relearned,values_respCategory,  values_countConsecutiveCorrect, values_feedback, values_countICFeedback,  values_countReversals, values_totalPoints, presentedCorrectStim, presentedIncorrectStim, response,  correct\n";
 
-    raw_data.forEach(function (row) {
+    raw_data.forEach((row) => {
         csv += row.join(",");
         csv += "\n";
     });

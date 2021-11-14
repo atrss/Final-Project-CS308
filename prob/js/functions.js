@@ -46,7 +46,7 @@ export const newPattern = () => {
 };
 
 /**
- *
+ * @function
  * @returns consecutive correct turns after which pattern is reversed.
  */
 export const chooseReversal = () => {
@@ -55,7 +55,7 @@ export const chooseReversal = () => {
 };
 
 /**
- *
+ * @function
  * @returns The current date time in string.
  */
 export const currentDateTime = () => {
@@ -76,7 +76,7 @@ export const currentDateTime = () => {
 };
 
 /**
- *
+ * @function
  * @param {Pattern} current_res - the pattern user selected.
  * @param {Number} point - point given in this move.
  * @param {Pattern} correct_res - the lucky pattern.
@@ -115,7 +115,7 @@ export const respCategory = (
 };
 
 /**
- *
+ * @function
  * @param {Boolean} hasReversed - if the last turn reversed the pattern this will be true.
  * @param {Number} point - point given in this move.
  * @param {Number} reversals - how many reversals has been done till now.

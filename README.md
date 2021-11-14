@@ -6,16 +6,30 @@
 
 The probabilistic reversal-learning task and the Tower of London task are standard psychological tests for evaluating an individual's executive functioning and attentional control abilities. The web-based applications will be used for collecting data and for building cognitive models to predict human behavior in these tasks.
 
-https://www.millisecond.com/download/library/toweroflondon/
+[Tower of London](https://www.millisecond.com/download/library/toweroflondon/)
 
-https://www.millisecond.com/download/library/reversallearning/probabilisticreversallearningtask/
+[Probabilistic Reversal Learning](https://www.millisecond.com/download/library/reversallearning/probabilisticreversallearningtask/)
 
-## Docs
+## Installation and Running.
+
+-   Install node.js and npm first.
+
+-   For installing the dependencies.
 
 ```bash
-npm install jsdoc docdash
+npm install
 ```
 
+-   For generating docs.
+
 ```bash
-jsdoc -c conf.json
+make
 ```
+
+-   For running the server.
+
+```bash
+node index.js
+```
+
+-   Access the website at [http://localhost:5000](http://localhost:5000)
