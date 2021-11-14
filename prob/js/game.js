@@ -70,15 +70,22 @@ const showLoadingScreen = () => {
     loading = true;
     document.getElementsByClassName("main")[0].style.visibility = "hidden";
     document.getElementsByClassName("loading")[0].style.display = "block";
+    document.getElementById("message").textContent = "Loading next move...";
+};
+
+const sleep = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {}, ms);
+    });
 };
 
 /**
  * Hides the loading screen.
  */
 const hideLoadingScreen = () => {
-    loading = false;
     document.getElementsByClassName("main")[0].style.visibility = "visible";
     document.getElementsByClassName("loading")[0].style.display = "none";
+    loading = false;
 };
 
 /**
@@ -183,14 +190,14 @@ const setStyle = (key, point) => {
         }, 500);
     }
 
-    if (face.style.visibility == "hidden") {
+    if (arrow !== null && face.style.visibility == "hidden") {
         face.style.visibility = "visible";
         setTimeout(() => {
             face.style.visibility = "hidden";
         }, 500);
     }
 
-    showLoadingScreen();
+    setTimeout(showLoadingScreen, 500);
     const endgame = prepareNextMove();
     if (endgame) {
         savingData();
@@ -198,7 +205,7 @@ const setStyle = (key, point) => {
         return;
     }
     addCurrentData(key, point);
-    hideLoadingScreen();
+    setTimeout(hideLoadingScreen, 3000);
 };
 
 document.addEventListener("keydown", (e) => {
