@@ -1,32 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: task.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: task.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
+/**
  * global variable to store the time for start of each attempt
 */
 var problem_time_start = 0;
@@ -59,38 +31,38 @@ with the 3 pegs and the balls on them according to ball_placement ref indicates 
 
  */
 var drawBoard = function(container, ball_placement, board_type) {
-    var board = '&lt;div class = tol_' + container + '>&lt;div class = tol_base>&lt;/div>'
+    var board = '<div class = tol_' + container + '><div class = tol_base></div>'
     if (container == 'your_board') {
-      board += '&lt;div class = tol_board_label>&lt;strong>Current Board&lt;/strong>&lt;/div>'
+      board += '<div class = tol_board_label><strong>Current Board</strong></div>'
     } else {
-      board += '&lt;div class = tol_board_label>&lt;strong>Goal&lt;/strong>&lt;/div>'
+      board += '<div class = tol_board_label><strong>Goal</strong></div>'
     }
-    for (var p = 0; p &lt; 3; p++) {
-      board += '&lt;div id = tol_peg_' + (p + 1) + '>&lt;div class = tol_peg>&lt;/div>&lt;/div>'
+    for (var p = 0; p < 3; p++) {
+      board += '<div id = tol_peg_' + (p + 1) + '><div class = tol_peg></div></div>'
 
       if (board_type == 'ref') {
-        if (ball_placement[p][0] === 0 &amp; held_ball === 0) {
-          board += '&lt;div id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
-        } else if (ball_placement[p].slice(-1)[0] !== 0 &amp; held_ball !== 0) {
-          board += '&lt;div id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
+        if (ball_placement[p][0] === 0 & held_ball === 0) {
+          board += '<div id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
+        } else if (ball_placement[p].slice(-1)[0] !== 0 & held_ball !== 0) {
+          board += '<div id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
         } else {
-          board += '&lt;div class = special id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
+          board += '<div class = special id = tol_peg_' + (p + 1) + ' onclick = "tapPeg(this.id)">'
         }
       }
       else {
-        board += '&lt;div id = tol_peg_' + (p + 1) + ' >'
+        board += '<div id = tol_peg_' + (p + 1) + ' >'
       }
       var peg = ball_placement[p]
-      for (var b = 0; b &lt; peg.length; b++) {
+      for (var b = 0; b < peg.length; b++) {
         if (peg[b] !== 0) {
           var ball = colors[peg[b] - 1]
-          board += '&lt;div class = "tol_ball tol_' + ball + '">&lt;div class = tol_ball_label>' + ball[0] +
-            '&lt;/div>&lt;/div>'
+          board += '<div class = "tol_ball tol_' + ball + '"><div class = tol_ball_label>' + ball[0] +
+            '</div></div>'
         }
       }
-      board += '&lt;/div>'
+      board += '</div>'
     }
-    board += '&lt;/div>'
+    board += '</div>'
     return board
 }
 
@@ -158,11 +130,11 @@ var checkEquality = function(arr1, arr2) {
   if (arr2.length !== arr1.length){
     return false;
   }
-  for (var i = 0;i&lt;arr1.length; i++) {
+  for (var i = 0;i<arr1.length; i++) {
     if (arr2[i].length !== arr1[i].length){
       return false;
     }
-    for (var j = 0;j&lt;arr1[i].length; j++) {
+    for (var j = 0;j<arr1[i].length; j++) {
       if (arr2[i][j] !== arr1[i][j]){
         return false;
       }
@@ -307,7 +279,7 @@ Function which shows the information about the user's current attempt
 var currInfo= function(){
   var problemno = problem
   var attempt = num_trials+1
-  var out = '&lt;div class = "score_canva">&lt;div>Allowed Moves: ' + moves[problem] + '&lt;/div>&lt;div>Attempt: ' + attempt+ '&lt;/div>&lt;div>Problem Number: ' + problemno + '&lt;/div>&lt;div>Your Moves: ' + num_moves+ '&lt;/div>&lt;/div>'
+  var out = '<div class = "score_canva"><div>Allowed Moves: ' + moves[problem] + '</div><div>Attempt: ' + attempt+ '</div><div>Problem Number: ' + problemno + '</div><div>Your Moves: ' + num_moves+ '</div></div>'
   return out
 }
 
@@ -327,14 +299,14 @@ Function generates the different pages/board configurations for the game
 */
 var getPractice = function() {
   if(problem>=configurations.length){
-    var feedback = '&lt;div class="centerv"> &lt;div class = "text2">To download the data for your experiment, press the button below. Your score for the experiment is: '+ points +'&lt;/div>'
-    var button = '&lt;div>&lt;input type= "button" class="button-two" onclick = "onfinish()" value="Download">&lt;/input>&lt;/div>&lt;/div>'
+    var feedback = '<div class="centerv"> <div class = "text2">To download the data for your experiment, press the button below. Your score for the experiment is: '+ points +'</div>'
+    var button = '<div><input type= "button" class="button-two" onclick = "onfinish()" value="Download"></input></div></div>'
     return feedback + button
   }
   else if(prev_prob!== problem){
     var probno = problem;
-    var text = '&lt;div class="centerv">  &lt;div  class = "text2">the next problem is problem number '+ probno+'. &lt;br> Press next to begin&lt;/div>'
-    var button = '&lt;div>&lt;input type= "button" class="button-two" onclick = "next()" value="Next" >&lt;/input>&lt;/div>&lt;/div>'
+    var text = '<div class="centerv">  <div  class = "text2">the next problem is problem number '+ probno+'. <br> Press next to begin</div>'
+    var button = '<div><input type= "button" class="button-two" onclick = "next()" value="Next" ></input></div></div>'
     return text + button
   }
   else if(checkEquality(original,configurations[problem])){
@@ -344,13 +316,13 @@ var getPractice = function() {
 
     var time1 = problem_time_end - problem_time_start;
     time1 = (time1/1000) % 1000;
-    var canvas = '&lt;div class = tol_canvas>&lt;/div>'
-    var feedback = '&lt;div class="text2">&lt;h1>You got it!!&lt;/h1>&lt;/div>'
+    var canvas = '<div class = tol_canvas></div>'
+    var feedback = '<div class="text2"><h1>You got it!!</h1></div>'
     if(problem!==0){
-      var button = '&lt;div>&lt;input type= "button" class="button-two" onclick = "onsuccess()" value="Next">&lt;/input>&lt;/div>'
+      var button = '<div><input type= "button" class="button-two" onclick = "onsuccess()" value="Next"></input></div>'
     }
     else{
-      var button = '&lt;div>&lt;input type= "button" class="button-one" onclick = "onsuccess()" value="End Practice">&lt;/input>&lt;/div>'
+      var button = '<div><input type= "button" class="button-one" onclick = "onsuccess()" value="End Practice"></input></div>'
     }
     return canvas + referenceBoard + goal + feedback + button
   }
@@ -358,18 +330,18 @@ var getPractice = function() {
     var currinfo = currInfo()
     var referenceBoard = drawBoard('your_board', original, 'ref')
     var goal = drawBoard('goal_board', configurations[problem],'target')
-    var canvas = '&lt;div class = tol_canvas>&lt;div class="tol_vertical_line">&lt;/div>&lt;/div>'
+    var canvas = '<div class = tol_canvas><div class="tol_vertical_line"></div></div>'
     var hold_box;
     if (held_ball !== 0) {
       ball = colors[held_ball - 1]
-      hold_box = '&lt;div class = tol_hand_box>&lt;div class = "tol_hand_ball tol_' + ball +
-        '">&lt;div class = tol_ball_label>' + ball[0] +
-        '&lt;/div>&lt;/div>&lt;/div>&lt;div class = tol_hand_label>&lt;strong>Current ball&lt;/strong>&lt;/div>'
+      hold_box = '<div class = tol_hand_box><div class = "tol_hand_ball tol_' + ball +
+        '"><div class = tol_ball_label>' + ball[0] +
+        '</div></div></div><div class = tol_hand_label><strong>Current ball</strong></div>'
     } else {
       hold_box =
-        '&lt;div class = tol_hand_box>&lt;/div>&lt;div class = tol_hand_label>&lt;strong>Current ball&lt;/strong>&lt;/div>'
+        '<div class = tol_hand_box></div><div class = tol_hand_label><strong>Current ball</strong></div>'
     }
-    var button = '&lt;div class="reset">&lt;input type= "button" class="button-two" onclick = "onfail()" value="Reset">&lt;/input>&lt;/div>'
+    var button = '<div class="reset"><input type= "button" class="button-two" onclick = "onfail()" value="Reset"></input></div>'
     return canvas + currinfo + referenceBoard + goal + hold_box + button
   }
 }
@@ -556,26 +528,4 @@ function download_csv_file() {
    hiddenElement.target = '_blank';
    hiddenElement.download = 'TOL.csv';
    hiddenElement.click();
-}</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#checkEquality">checkEquality</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#configurations">configurations</a></li><li><a href="global.html#curr_data">curr_data</a></li><li><a href="global.html#currInfo">currInfo</a></li><li><a href="global.html#data">data</a></li><li><a href="global.html#download_csv_file">download_csv_file</a></li><li><a href="global.html#drawBoard">drawBoard</a></li><li><a href="global.html#firstmove">firstmove</a></li><li><a href="global.html#getPractice">getPractice</a></li><li><a href="global.html#held_ball">held_ball</a></li><li><a href="global.html#moves">moves</a></li><li><a href="global.html#movestring">movestring</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#num_moves">num_moves</a></li><li><a href="global.html#num_trials">num_trials</a></li><li><a href="global.html#onfail">onfail</a></li><li><a href="global.html#onfinish">onfinish</a></li><li><a href="global.html#onsuccess">onsuccess</a></li><li><a href="global.html#original">original</a></li><li><a href="global.html#points">points</a></li><li><a href="global.html#prev_prob">prev_prob</a></li><li><a href="global.html#problem">problem</a></li><li><a href="global.html#problem_time_end">problem_time_end</a></li><li><a href="global.html#problem_time_start">problem_time_start</a></li><li><a href="global.html#tapPeg">tapPeg</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Nov 14 2021 16:09:31 GMT+0530 (India Standard Time)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>
+}

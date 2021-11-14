@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            font-family: 'Roboto';
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        body {
+            background-color: black;
+            font-family: arial;
+            color: white;
+            font-size: 3.5vh;
+
+        }
+
+        .main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            width: 100%;
+            max-width: 2000px;
+        }
+
+        .images img {
+            max-width: 200px;
+        }
+
+        .loading {
+            display: none;
+            transition-property: display;
+            transition-timing-function: ease-in-out;
+            transition-duration: 2.5s;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="loading">
+        <span id="message"></span>
+    </div>
+    <div class="main center">
+        <div class="images">
+            <div class="mb-2">
+                <img id="arrow1" src="/prob/images/selected.png" style="visibility: hidden;">
+            </div>
+            <div>
+
+            </div>
+            <div class="mb-2">
+                <img id="arrow2" src="/prob/images/selected.png" style="visibility: hidden;">
+            </div>
+            <div>
+                <img id="img1" src="/prob/images/stim1.jpg" />
+            </div>
+            <div style="margin: auto">
+                <img id="face" height=100 src="/prob/images/smiley.png" style="visibility: hidden;" />
+
+            </div>
+            <div>
+                <img id="img2" src="/prob/images/stim2.jpg" />
+            </div>
+        </div>
+        <p>Points : <span id="points">0</span></p>
+    </div>
+    <script type="module" src="/prob/js/game.js"></script>
+</body>
+
+</html>
