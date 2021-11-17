@@ -10,6 +10,7 @@ The probabilistic reversal-learning task and the Tower of London task are standa
 
 [Probabilistic Reversal Learning](https://www.millisecond.com/download/library/reversallearning/probabilisticreversallearningtask/)
 
+The web based version can be accessed at https://finalproject-cs308.herokuapp.com/ . To run it on local, follow the steps as given below:-
 ## Installation and Running.
 
 -   Install node.js and npm first.
